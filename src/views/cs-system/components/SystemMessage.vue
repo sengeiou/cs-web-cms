@@ -20,8 +20,8 @@ export default {
   .system-message {
     display: inline-block;
     padding: 10px 20px;
-    font-size: 16px;
-    background-color: #c3c3c3;
+    font-size: 15px;
+    background-color: #c4c4c4;
     color: #fff;
     font-weight: bold;
     border-radius: 30px;

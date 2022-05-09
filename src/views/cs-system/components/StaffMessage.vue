@@ -33,18 +33,22 @@ export default {
   align-items: flex-end;
   justify-content: flex-end;
   margin-bottom: 20px;
-  .staff-time {
-    display: inline-block;
-    font-size: 14px;
-    margin-right: 3px;
-    color: #888888;
+  .top-section{
     margin-bottom: 3px;
-  }
-  .staff-name {
-    display: inline-block;
-    color: black;
-    font-weight: bold;
-    margin-right: 3px;
+    .staff-time {
+      display: inline-block;
+      margin-right: 3px;
+      margin-bottom: 3px;
+      font-size: 13px;
+      color: #999;
+    }
+    .staff-name {
+      display: inline-block;
+      color: #666;
+      font-size: 14px;
+      font-weight: bold;
+      margin-right: 3px;
+    }
   }
   .content-text {
     color: white;

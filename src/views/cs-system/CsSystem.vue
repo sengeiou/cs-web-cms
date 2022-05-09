@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="20" style="margin-top: 20px;">
+    <el-row :gutter="14">
       <el-col :span="6">
         <RoomList />
       </el-col>

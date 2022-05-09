@@ -75,26 +75,20 @@ export default {
   text-align: center;
   .input {
     position: relative;
-    .message-input {
-      width: 95%;
-      padding-bottom: 15px;
-    }
     .input-area {
       position: relative;
-      width: 96%;
       background-color: white;
-      border-radius: 10px;
+      border-radius: 0 0 6px 6px;
       text-align: left;
-      margin: 0 auto 12px;
       textarea {
         border-radius: 10px;
         border: none;
         width: 100%;
         padding: 20px;
         resize: none;
-        height: 150px;
+        height: 20vh;
         font-size: 16px;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.3px;
         &:focus {
           outline: none !important;
         }

@@ -1,16 +1,18 @@
 <template>
-  <div class="header-container">
-    <div class="header-text">諮詢房 #{{activeRoomId}}</div>
-    <div>
-      <el-tooltip content="轉接" placement="top">
-        <el-button type="success" icon="el-icon-position" circle @click="openTransferRoomDialog"></el-button>
-      </el-tooltip>
-      <el-tooltip content="評分" placement="top">
-        <el-button type="warning" icon="el-icon-star-off" circle @click="sendScore"></el-button>
-      </el-tooltip>
-      <el-tooltip content="結束" placement="top">
-        <el-button type="danger" icon="el-icon-switch-button" circle @click="openCloseRoomDialog"></el-button>
-      </el-tooltip>
+  <div>
+    <div class="header-container">
+      <div class="header-text">諮詢房 #{{activeRoomId}}</div>
+      <div>
+        <el-tooltip content="轉接" placement="top">
+          <el-button type="success" icon="el-icon-position" circle @click="openTransferRoomDialog"></el-button>
+        </el-tooltip>
+        <el-tooltip content="評分" placement="top">
+          <el-button type="warning" icon="el-icon-star-off" circle @click="sendScore"></el-button>
+        </el-tooltip>
+        <el-tooltip content="結束" placement="top">
+          <el-button type="danger" icon="el-icon-switch-button" circle @click="openCloseRoomDialog"></el-button>
+        </el-tooltip>
+      </div>
     </div>
     <CloseRoomDialog ref="CloseRoomDialog" />
     <TransferRoomDialog ref="TransferRoomDialog" />

@@ -1,12 +1,9 @@
 <template>
   <div class="room-list-container" v-loading="loading">
     <el-tabs v-model="activeName" @tab-click="handleClick" lazy stretch>
-      <el-tab-pane label="當前" name="Serving">
-        <div class="tab-pane-item">
-          <div class="empty-text" v-if="roomList.length === 0">
-            <span>暫無數據</span>
-          </div>
-          <div v-else v-for="(room,idx) in roomList" :key="idx">
+      <el-tab-pane label="當前" name="Serving" style="margin-top: 5px;">
+        <div v-if="roomList.length > 0" class="tab-pane-item">
+          <div v-for="(room,idx) in roomList" :key="idx">
             <RoomItem
                 :id="room.id"
                 :name="room.memberName"
@@ -15,13 +12,14 @@
             />
           </div>
         </div>
+        <div v-else class="empty-room">
+          <svg-icon icon-class="people"></svg-icon>
+          <span>- 尚無訪客 -</span>
+        </div>
       </el-tab-pane>
-      <el-tab-pane label="等待中" name="Pending">
-        <div class="tab-pane-item">
-          <div class="empty-text" v-if="roomList.length === 0">
-            <span>暫無數據</span>
-          </div>
-          <div v-else v-for="(room,idx) in roomList" :key="idx">
+      <el-tab-pane label="等待中" name="Pending" style="margin-top: 5px;">
+        <div v-if="roomList.length > 0" class="tab-pane-item">
+          <div v-for="(room,idx) in roomList" :key="idx">
             <RoomItem
                 :id="room.id"
                 :name="room.memberName"
@@ -29,6 +27,10 @@
                 :isRead="true"
             />
           </div>
+        </div>
+        <div v-else class="empty-room">
+          <svg-icon icon-class="people"></svg-icon>
+          <span>- 尚無訪客 -</span>
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -78,21 +80,21 @@ export default {
         },
         pagination: {
           page: 1,
-          pageSize: 10
+          pageSize: 6
         }
       })
-    }
+    },
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .room-list-container {
-  border: 1px solid #d4d4d4;
   border-radius: 6px;
+  height: 90vh;
+  background-color: white;
   .tab-pane-item {
-    height: 560px;
-    overflow: scroll;
+    height: 100%;
     padding: 0 14px;
   }
   .empty-text {
@@ -104,6 +106,20 @@ export default {
       padding: 10px;
       margin-bottom: 10px;
     }
+  }
+}
+.empty-room {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  color: #e3e3e3;
+  font-weight: bold;
+  font-size: 22px;
+  .svg-icon {
+    width: 75px;
+    height: 80px;
+    margin: 30px 20px;
   }
 }
 </style>

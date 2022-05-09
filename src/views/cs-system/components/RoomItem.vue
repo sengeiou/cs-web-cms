@@ -3,10 +3,10 @@
   <span v-if="!isRead" class="red-point-hint"></span>
   <div class="top-container">
     <div class="avatar">
-      <img src="https://picsum.photos/100/100?random=12" />
+      <el-avatar icon="el-icon-user-solid"></el-avatar>
     </div>
     <div class="item-text">
-      <div>用戶名: {{name}}</div>
+      <div style="color: #333;font-weight: bold;">用戶名: {{name}}</div>
       <div style="margin-top: 5px;color: #777;font-weight: bold;">諮詢房 #{{id}}</div>
     </div>
   </div>
@@ -46,8 +46,8 @@ export default {
 .room-item-container {
   width: 100%;
   padding: 16px 16px 13px 16px;
-  margin: auto auto 14px;
-  border: 2px solid #ddd;
+  margin: auto auto 18px;
+  box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1);
   border-radius: 6px;
   position: relative;
   .red-point-hint::before{
@@ -66,10 +66,12 @@ export default {
     display: flex;
     align-items: center;
     .avatar {
-      img {
-        width: 50px;
-        height: 50px;
+      .el-avatar {
+        width: 44px;
+        height: 44px;
         border-radius: 50%;
+        vertical-align: center;
+        line-height: 44px;
       }
     }
     .item-text {
@@ -96,11 +98,11 @@ export default {
     }
   }
   &:hover {
-    border: 2px solid #888;
+    box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.3);
     cursor: pointer;
   }
   &.selected {
-    border: 2px solid #888;
+    box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.3);
   }
 }
 </style>

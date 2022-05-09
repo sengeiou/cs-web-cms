@@ -20,8 +20,8 @@
       </el-form>
     </div>
     <div slot="footer">
-      <el-button type="primary" plain @click="handleCancel"> 取消 </el-button>
-      <el-button type="primary" @click="submitForm"> 確認 </el-button>
+      <el-button @click="handleCancel">取消</el-button>
+      <el-button type="primary" @click="submitForm">確認</el-button>
     </div>
   </AppDialog>
 </template>

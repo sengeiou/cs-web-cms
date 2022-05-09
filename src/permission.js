@@ -43,6 +43,7 @@ router.beforeEach(async (to, from, next) => {
       connectSocket();
     }
     const hasRouteKeys = store.getters["permission/hasRouteKeys"]
+
     // 已經初始化過動態路由則直接前往
     if (hasRouteKeys) {
       next()
@@ -60,8 +61,7 @@ router.beforeEach(async (to, from, next) => {
       // 最後再補上含有通配符的匹配路由 (必須放到最後)
       router.addRoutes([{ path: '*', redirect: '/404', hidden: true }])
       // 加上replace，讓它不會向 history 添加新紀錄，而是直接替換當前的 history 紀錄
-      // accessRoutes.length === 0 ? next() : next({ ...to, replace: true }) // have undefined bug
-      next()
+      accessRoutes.length === 0 ? next() : next({ ...to, replace: true }) // 首次登入後會有 have undefined bug
     } catch (error) {
       await store.dispatch('user/resetToken')
       Message.error(error || 'Has Error')

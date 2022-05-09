@@ -9,7 +9,6 @@
         :text-color="variables.menuText"
         :active-text-color="variables.menuActiveText"
         :default-active="activeMenu"
-        :unique-opened="true"
         :router="true"
       >
         <sidebar-item

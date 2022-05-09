@@ -35,17 +35,18 @@ export default {
   margin-bottom: 20px;
   .content-section {
     .content-desc {
-      margin-bottom: 5px;
+      margin-bottom: 3px;
       .member-name {
         display: inline-block;
-        color: black;
+        color: #666;
+        font-size: 14px;
         font-weight: bold;
         margin-right: 3px;
       }
       .member-time {
         display: inline-block;
-        font-size: 14px;
-        color: #888888;
+        font-size: 13px;
+        color: #999;
       }
     }
     .content-text {

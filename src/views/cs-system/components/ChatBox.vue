@@ -115,11 +115,12 @@ export default {
   position: relative;
   width: 100%;
   background-color: #f4f5f6;
-  border: 1px solid #d4d4d4;
   border-radius: 6px;
+  height: 90vh;
   .chat-box-mask {
     width: 100%;
     height: 100%;
+    border-radius: 6px;
     position: absolute;
     top: 0;
     left: 0;
@@ -138,10 +139,10 @@ export default {
     transform: translateX(-50%);
   }
   .chat-box-body {
-    height: 360px;
+    height: 60vh;
     margin: 12px 0 20px 0;
     padding: 0 15px;
-    overflow: scroll;
+    overflow-y: scroll;
     .message-content {
       display: block;
       margin: 20px;

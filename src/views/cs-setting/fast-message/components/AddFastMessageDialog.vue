@@ -26,9 +26,15 @@
         </el-form-item>
         <el-form-item label="內容:" prop="content">
           <el-input
-            v-model="formData.content"
-            size="small"
             style="width: 300px"
+            v-model="formData.content"
+            placeholder="請輸入內容"
+            size="small"
+            :autosize="true"
+            type="textarea"
+            resize="none"
+            maxlength="250"
+            show-word-limit
           />
         </el-form-item>
         <el-form-item label="狀態:" prop="status">

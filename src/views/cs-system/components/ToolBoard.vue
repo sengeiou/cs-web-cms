@@ -5,30 +5,38 @@
       <el-input
           placeholder="請輸入標題"
           prefix-icon="el-icon-search"
+          style="margin-bottom: 20px;"
           v-model="titleSearch"
           @change="handleSearch"
       >
       </el-input>
-      <el-collapse v-model="activeItems" accordion>
+      <el-collapse class="group-collapse" v-if="tmpGroup.length > 0" v-model="activeItems">
         <el-collapse-item v-for="(groupItem,idx) in tmpGroup" :key="idx" :title="groupItem.category.name" :name="groupItem.category.id">
           <el-table
               :data="groupItem.items"
               border
-              style="width: 100%"
+              style="width: 100%;border-radius: 8px;"
+              :cell-style="{padding:'7px'}"
+              :header-cell-style="{padding:'5px'}"
           >
             <el-table-column
-                fixed
-                prop="title"
-                label="標題">
+              fixed
+              prop="title"
+              label="標題"
+              width="100"
+            >
             </el-table-column>
             <el-table-column
-                fixed
-                prop="content"
-                label="內容">
+              fixed
+              prop="content"
+              label="內容"
+            >
             </el-table-column>
             <el-table-column
-                label="操作"
-                width="100">
+              label="操作"
+              width="90"
+              align="center"
+            >
               <template slot-scope="scope">
                 <el-button type="primary" size="small" @click="handleSend(scope.row.content)">發送</el-button>
               </template>
@@ -92,11 +100,19 @@ export default {
     },
     handleSearch(title) {
       this.tmpGroup = deepCopy(this.group)
-      for(let i = 0; i< this.tmpGroup.length; i++){
+      for(let i = 0; i < this.tmpGroup.length; i++){
         this.tmpGroup[i].items = this.tmpGroup[i].items.filter(function (item) {
           return item.title.includes(title)
         })
       }
+      for(let i = 0; i < this.tmpGroup.length; i++){
+        this.tmpGroup[i].items = this.tmpGroup[i].items.filter(function (item) {
+          return item.title.includes(title)
+        })
+      }
+      this.tmpGroup = this.tmpGroup.filter(function (group) {
+        return group.items.length > 0
+      })
     }
   }
 }
@@ -105,11 +121,27 @@ export default {
 <style lang="scss" scoped>
 .tool-board-container {
   width: 100%;
-  height: 600px;
-  border: 1px solid #d4d4d4;
+  height: 90vh;
   border-radius: 6px;
+  background-color: white;
   .tab-panel-container {
-    padding: 10px;
+    padding: 10px 20px;
+    overflow-y: scroll;
+    .group-collapse {
+      ::v-deep .el-collapse-item__header {
+        padding-left: 10px;
+        font-size: 14px;
+        color: #333;
+        font-weight: bold;
+      }
+    }
+  }
+}
+::v-deep .el-tabs {
+  ::v-deep .el-tabs__header {
+    ::v-deep .el-tabs__item {
+      padding: 0 !important;
+    }
   }
 }
 </style>
