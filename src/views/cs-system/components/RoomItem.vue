@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     handleClick() {
-      this.isRead = true
+      this.$store.commit("cs/SET_MESSAGE_READ", this.id)
       this.$store.commit("cs/SET_ACTIVE_ROOM", this.id)
       this.$store.dispatch("cs/getRoomMessageList", {
         roomID: this.id

@@ -69,6 +69,14 @@ const mutations = {
 	SET_NEW_MESSAGE(state, value) {
 		state.newMessage = value
 	},
+	SET_MESSAGE_READ(state, roomId) {
+		for (let i = 0; i < state.roomList.length; i++) {
+			if (state.roomList[i].id === roomId) {
+				state.roomList[i].isRead = true
+				break
+			}
+		}
+	},
 }
 
 const actions = {

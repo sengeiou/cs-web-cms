@@ -9,7 +9,7 @@
     >
       <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
         <el-menu-item
-            v-if="onlyOneChild.meta.key === 'CsSystem.Dashboard'"
+            v-if="onlyOneChild.meta.key === 'CsSystem'"
             :index="resolvePath(onlyOneChild.path)"
             :class="{ 'submenu-title-noDropdown': !isNest, 'red-point': checkNewMessage(onlyOneChild.meta.key) }"
             @click="handleCheckMessage"
@@ -129,7 +129,7 @@ export default {
       return path.resolve(this.basePath, routePath)
     },
     checkNewMessage(key) {
-      if (key === 'CsSystem.Dashboard' && this.newMessage) {
+      if (key === 'CsSystem' && this.newMessage) {
         if (this.$route.path !== "/cs-system/dashboard") {
           return true
         } else {
