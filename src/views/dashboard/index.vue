@@ -1,14 +1,19 @@
 <template>
   <div class="app-container">
     <panel-group />
-    <el-row :gutter="50">
-      <el-col :span="12">
+    <el-row :gutter="30">
+      <el-col :span="10">
         <div class="staff-panel">
           <h3>在線客服</h3>
           <AppTable :table-data="tableData" :table-columns="tableColumns" />
         </div>
       </el-col>
-      <el-col :span="12"></el-col>
+      <el-col :span="14">
+        <div class="staff-panel">
+          <h3>提醒事項</h3>
+          <AppTable :table-data="remindData" :table-columns="remindColumns" />
+        </div>
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -17,6 +22,7 @@
 import PanelGroup from './components/PanelGroup'
 import {apiGetStaffList} from "@/api/staff";
 import AppTable from "@/components/AppTable";
+import {apiGetRemindList} from "@/api/remind";
 
 export default {
   name: 'Dashboard',
@@ -28,12 +34,13 @@ export default {
     return {
       tableData: [],
       tableColumns: [
-        { prop: 'id', label: '編號', align: "center" },
+        { prop: 'id', label: '編號', align: "center", width: 80 },
         { prop: 'name', label: '名稱', align: "center" },
         {
           prop: 'servingStatus',
           label: '服務狀態',
           align: "center",
+          width: 100,
           render: (h, param) => {
             switch (param.row.servingStatus) {
               case 'Closed':
@@ -46,10 +53,16 @@ export default {
           }
         },
       ],
+      remindData: [],
+      remindColumns: [
+        { prop: 'title', label: '標題', width: 200 },
+        { prop: 'content', label: '內容' },
+      ]
     }
   },
   created() {
     this.fetchData()
+    this.fetchRemind()
   },
   methods: {
     async fetchData() {
@@ -67,6 +80,26 @@ export default {
           }
         })
         this.tableData = data.listStaff.staffs
+        this.loading = false
+      } catch (err) {
+        console.log(err)
+        this.loading = false
+      }
+    },
+    async fetchRemind() {
+      try {
+        this.loading = true
+        const { data } = await apiGetRemindList({
+          filter: {
+            content: '',
+            status: 'Enabled',
+          },
+          pagination: {
+            page: 1,
+            pageSize: 10,
+          }
+        })
+        this.remindData = data.listRemind.reminds
         this.loading = false
       } catch (err) {
         console.log(err)

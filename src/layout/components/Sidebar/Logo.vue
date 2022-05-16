@@ -11,7 +11,7 @@
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
         <img src="@/assets/logo.svg" class="sidebar-logo" style="margin-right: 8px;"/>
-        <span class="sidebar-logo--text">ButyPick</span>
+        <span class="sidebar-logo--text">客服中心</span>
       </router-link>
     </transition>
   </div>

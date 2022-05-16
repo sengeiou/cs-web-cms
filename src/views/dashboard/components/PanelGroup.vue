@@ -7,7 +7,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            用戶數
+            會員數
           </div>
           <count-to :start-val="0" :end-val="numbers.memberCount" :duration="1000" class="card-panel-num" />
         </div>

@@ -143,6 +143,20 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/cms-management',
+    component: Layout,
+    redirect: '/cms-management/remind-list',
+    meta: { title: '後台管理', icon: 'folder', key: 'CMS' },
+    children: [
+      {
+        path: '/cms-management/remind-list',
+        name: 'RemindList',
+        component: () => import('@/views/cms/RemindList'),
+        meta: { title: '提醒列表', icon: 'remind', key: 'CMS.RemindList' }
+      },
+    ]
+  },
+  {
     path: '/staff-management',
     component: Layout,
     redirect: '/staff/list',

@@ -1,8 +1,13 @@
 <template>
   <div class="app-container" v-loading="loading">
-    <AppPanel title="職員列表">
+    <AppPanel title="提醒列表">
       <template v-slot:filter>
-        <el-input v-model="form.filter.name" placeholder="名稱" style="width: 200px;" />
+        <el-input v-model="form.filter.content" placeholder="內容" style="width: 200px;" />
+        <el-select style="width: 100px;" v-model="form.filter.status" placeholder="狀態">
+          <el-option label="全部" value="All"></el-option>
+          <el-option label="啟用" value="Enabled"></el-option>
+          <el-option label="禁用" value="Disabled"></el-option>
+        </el-select>
         <el-button icon="el-icon-search" type="primary" @click="fetchData">搜尋</el-button>
         <el-button icon="el-icon-circle-close" @click="handleClear">清除</el-button>
       </template>
@@ -23,25 +28,25 @@
         />
       </template>
     </AppPanel>
-    <AddStaffDialog ref="AddStaffDialog" @flush-parent="flushTable" />
-    <EditStaffDialog ref="EditStaffDialog" @flush-parent="flushTable" />
+    <AddRemindDialog ref="AddRemindDialog" @flush-parent="flushTable" />
+    <EditRemindDialog ref="EditRemindDialog" @flush-parent="flushTable" />
   </div>
 </template>
 
 <script>
-import {apiDeleteStaff, apiGetStaffList} from "@/api/staff";
 import AppTable from "@/components/AppTable";
 import AppPanel from "@/components/AppPanel";
 import AppPagination from "@/components/AppPagination";
-import AddStaffDialog from "@/views/staff/components/AddStaffDialog";
-import EditStaffDialog from "@/views/staff/components/EditStaffDialog";
+import AddRemindDialog from "@/views/cms/components/AddRemindDialog";
+import EditRemindDialog from "@/views/cms/components/EditRemindDialog";
 import EditAvatarDialog from "@/layout/components/EditAvatarDialog";
+import {apiDeleteRemind, apiGetRemindList} from "@/api/remind";
 
 export default {
-  name: 'StaffList',
+  name: 'RemindList',
   components: {
-    AddStaffDialog,
-    EditStaffDialog,
+    AddRemindDialog,
+    EditRemindDialog,
     AppTable,
     AppPanel,
     AppPagination,
@@ -51,15 +56,13 @@ export default {
     return {
       loading: false,
       initFilter: {
-        name: '',
+        content: '',
         status: 'All',
-        servingStatus: 'All',
       },
       form: {
         filter: {
-          name: '',
+          content: '',
           status: 'All',
-          servingStatus: 'All',
         },
         pagination: {
           page: 1,
@@ -69,33 +72,20 @@ export default {
       },
       tableData: [],
       tableColumns: [
-        { prop: 'id', label: '編號' },
-        { prop: 'name', label: '名稱' },
-        { prop: 'role', label: '角色' },
-        { prop: 'username', label: '用戶名' },
+        { prop: 'id', label: '編號', width: 100 },
+        { prop: 'title', label: '標題', width: 200 },
+        { prop: 'content', label: '內容' },
         {
           prop: 'status',
           label: '狀態',
+          align: "center",
+          width: 100,
           render: (h, scope) => {
             switch (scope.row.status) {
               case 'Disabled':
                 return <el-tag effect="dark" type="danger">禁用</el-tag>
               case 'Enabled':
                 return <el-tag effect="dark" type="success">啟用</el-tag>
-            }
-          }
-        },
-        {
-          prop: 'servingStatus',
-          label: '服務狀態',
-          render: (h, param) => {
-            switch (param.row.servingStatus) {
-              case 'Closed':
-                return <el-tag effect="dark" type="danger">關閉</el-tag>
-              case 'Serving':
-                return <el-tag effect="dark" type="success">服務中</el-tag>
-              case 'Pending':
-                return <el-tag effect="dark" type="warning">閒置</el-tag>
             }
           }
         },
@@ -110,18 +100,18 @@ export default {
       this.fetchData()
     },
     openDialogAdd() {
-      this.$refs.AddStaffDialog.show()
+      this.$refs.AddRemindDialog.show()
     },
     openDialogEdit(id) {
-      this.$refs.EditStaffDialog.show(id)
+      this.$refs.EditRemindDialog.show(id)
     },
     async fetchData() {
       try {
         this.loading = true
         delete this.form.pagination.total
-        const { data } = await apiGetStaffList(this.form)
-        this.tableData = data.listStaff.staffs
-        this.form.pagination = { ...data.listStaff.pagination }
+        const { data } = await apiGetRemindList(this.form)
+        this.tableData = data.listRemind.reminds
+        this.form.pagination = { ...data.listRemind.pagination }
         this.loading = false
       } catch (err) {
         console.log(err)
@@ -136,7 +126,7 @@ export default {
       try {
         await this.$confirmDelete()
         this.loading = true
-        await apiDeleteStaff({ input: id })
+        await apiDeleteRemind({ input: id })
         this.$showSuccessMessage("刪除成功")
         await this.fetchData()
         this.loading = false

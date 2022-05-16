@@ -2,7 +2,7 @@
   <div class="app-container" v-loading="loading">
     <AppPanel title="角色列表">
       <template v-slot:filter>
-        <el-input v-model="form.filter.name" placeholder="名稱" style="margin-right: 10px;width: 200px;" />
+        <el-input v-model="form.filter.name" placeholder="名稱" style="width: 200px;" />
         <el-button icon="el-icon-search" type="primary" @click="fetchData">搜尋</el-button>
         <el-button icon="el-icon-circle-close" @click="handleClear">清除</el-button>
       </template>

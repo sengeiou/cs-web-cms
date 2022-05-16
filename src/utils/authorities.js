@@ -10,6 +10,8 @@ const permissionKeys = {
 	"Report": "報表管理",
 	"Report.DailyTagReport": "諮詢類型報表",
 	"Report.DailyGuestReport": "訪客數報表",
+	"CMS": "後台管理",
+	"CMS.RemindList": "提醒列表",
 	"Staff": "職員管理",
 	"Staff.StaffList": "職員列表",
 	"Staff.RoleList": "角色列表",
