@@ -27,18 +27,6 @@ export default {
   data() {
     return {
       selected: "",
-      initialFormData: {
-        name: '',
-        username: '',
-        password: '',
-        status: 'Enabled'
-      },
-      formData: {
-        name: '',
-        username: '',
-        password: '',
-        status: 'Enabled'
-      },
       avatars: [
           "avatar_1.jpg",
           "avatar_2.jpg",
@@ -55,7 +43,6 @@ export default {
   },
   methods: {
     show() {
-      this.formData = deepCopy(this.initialFormData)
       this.$refs.dialog.show()
     },
     handleCancel() {
@@ -64,7 +51,7 @@ export default {
     async submitForm() {
       this.$refs.dialog.toggleLoadingFullScreen()
       try {
-        await apiUpdateStaffAvatar({avatar: this.selected})
+        await apiUpdateStaffAvatar({ avatar: this.selected })
         this.$store.state.user.avatar = this.selected
         this.$showSuccessMessage("設置成功", this.afterSubmit)
       } catch (error) {

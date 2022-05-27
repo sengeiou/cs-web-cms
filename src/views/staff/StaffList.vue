@@ -2,7 +2,7 @@
   <div class="app-container" v-loading="loading">
     <AppPanel title="職員列表">
       <template v-slot:filter>
-        <el-input v-model="form.filter.name" placeholder="名稱" style="width: 200px;" />
+        <el-input v-model="form.name" placeholder="名稱" style="width: 200px;" />
         <el-button icon="el-icon-search" type="primary" @click="fetchData">搜尋</el-button>
         <el-button icon="el-icon-circle-close" @click="handleClear">清除</el-button>
       </template>
@@ -18,7 +18,7 @@
             :handle-delete="handleDelete"
         />
         <AppPagination
-            :data="form.pagination"
+            :data="pagination"
             @change="handleChange"
         />
       </template>
@@ -52,49 +52,47 @@ export default {
       loading: false,
       initFilter: {
         name: '',
-        status: 'All',
-        servingStatus: 'All',
+        status: 0,
+        serving_status: 0,
+      },
+      pagination: {
+        page: 1,
+        page_size: 10,
+        total: 0,
       },
       form: {
-        filter: {
-          name: '',
-          status: 'All',
-          servingStatus: 'All',
-        },
-        pagination: {
-          page: 1,
-          pageSize: 10,
-          total: 0,
-        }
+        name: '',
+        status: 0,
+        serving_status: 0,
       },
       tableData: [],
       tableColumns: [
         { prop: 'id', label: '編號' },
         { prop: 'name', label: '名稱' },
-        { prop: 'role', label: '角色' },
+        { prop: 'role_name', label: '角色' },
         { prop: 'username', label: '用戶名' },
         {
           prop: 'status',
           label: '狀態',
           render: (h, scope) => {
             switch (scope.row.status) {
-              case 'Disabled':
-                return <el-tag effect="dark" type="danger">禁用</el-tag>
-              case 'Enabled':
+              case 1:
                 return <el-tag effect="dark" type="success">啟用</el-tag>
+              case 2:
+                return <el-tag effect="dark" type="danger">禁用</el-tag>
             }
           }
         },
         {
-          prop: 'servingStatus',
+          prop: 'serving_status',
           label: '服務狀態',
           render: (h, param) => {
-            switch (param.row.servingStatus) {
-              case 'Closed':
+            switch (param.row.serving_status) {
+              case 1:
                 return <el-tag effect="dark" type="danger">關閉</el-tag>
-              case 'Serving':
+              case 2:
                 return <el-tag effect="dark" type="success">服務中</el-tag>
-              case 'Pending':
+              case 3:
                 return <el-tag effect="dark" type="warning">閒置</el-tag>
             }
           }
@@ -103,11 +101,11 @@ export default {
     }
   },
   created() {
-    this.fetchData()
+    this.fetchData(this.pagination)
   },
   methods: {
     flushTable() {
-      this.fetchData()
+      this.fetchData(this.pagination)
     },
     openDialogAdd() {
       this.$refs.AddStaffDialog.show()
@@ -115,13 +113,14 @@ export default {
     openDialogEdit(id) {
       this.$refs.EditStaffDialog.show(id)
     },
-    async fetchData() {
+    async fetchData(payload) {
       try {
         this.loading = true
-        delete this.form.pagination.total
-        const { data } = await apiGetStaffList(this.form)
-        this.tableData = data.listStaff.staffs
-        this.form.pagination = { ...data.listStaff.pagination }
+        delete this.pagination.total
+        const params = new URLSearchParams({...this.form, ...(payload)});
+        const { data, pagination } = await apiGetStaffList(params.toString())
+        this.tableData = data
+        this.pagination = pagination
         this.loading = false
       } catch (err) {
         console.log(err)
@@ -129,16 +128,15 @@ export default {
       }
     },
     handleChange(payload) {
-      this.form.pagination = { ...payload }
-      this.fetchData()
+      this.fetchData(payload)
     },
     async handleDelete(id) {
       try {
         await this.$confirmDelete()
         this.loading = true
-        await apiDeleteStaff({ input: id })
+        await apiDeleteStaff(id)
         this.$showSuccessMessage("刪除成功")
-        await this.fetchData()
+        await this.fetchData(this.pagination)
         this.loading = false
       } catch (err) {
         console.log(err)
@@ -146,7 +144,7 @@ export default {
       }
     },
     handleClear() {
-      this.form.filter = { ...this.initFilter }
+      this.form = { ...this.initFilter }
     },
   },
 }

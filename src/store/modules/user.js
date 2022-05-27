@@ -1,8 +1,7 @@
-import { apiAuthLogin, apiAuthLogout } from '@/api/auth'
+import {apiAuthLogin, apiAuthLogout, apiGetStaffInfo} from '@/api/auth'
 import { setToken, removeToken } from '@/utils/storage'
 import { resetRouter } from '@/router'
 import { deepCopy } from '@/utils'
-import {apiGetStaffInfo} from "@/api/staff";
 
 const initialState = {
   id: 0,
@@ -22,7 +21,7 @@ const mutations = {
     state.id = staffInfo.id
     state.name = staffInfo.name
     state.username = staffInfo.username
-    state.servingStatus = staffInfo.servingStatus
+    state.servingStatus = staffInfo.serving_status
     state.avatar = staffInfo.avatar
   },
 }
@@ -32,7 +31,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       apiGetStaffInfo()
         .then((response) => {
-          commit('SET_INFO', response.data.getStaff.staff)
+          commit('SET_INFO', response.data)
           resolve()
         })
         .catch((error) => {
@@ -45,10 +44,11 @@ const actions = {
       apiAuthLogin(userInfo)
         .then((response) => {
           commit('RESET_STATE')
-          setToken(response.data.login.token)
+          setToken(response.data.token)
           resolve()
         })
         .catch((error) => {
+          console.log(error)
           reject(error)
         })
     })
@@ -83,7 +83,7 @@ const getters = {
   id: state => state.id,
   name: state => state.name,
   username: state => state.username,
-  servingStatus: state => state.servingStatus,
+  servingStatus: state => state.servingStatus === 1 ? 'Closed' : 'Serving',
   avatar: state => state.avatar,
 }
 

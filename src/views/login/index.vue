@@ -3,7 +3,7 @@
     <div class="login-text">客服後台</div>
     <el-form
       ref="loginForm"
-      :model="loginForm.input"
+      :model="loginForm"
       :rules="rules"
       class="login-form"
       autocomplete="off"
@@ -14,7 +14,7 @@
           <svg-icon icon-class="user" />
         </span>
         <el-input
-          v-model="loginForm.input.username"
+          v-model="loginForm.username"
           placeholder="帳號"
           name="username"
           type="text"
@@ -29,7 +29,7 @@
         <el-input
           :key="passwordType"
           ref="password"
-          v-model="loginForm.input.password"
+          v-model="loginForm.password"
           :type="passwordType"
           placeholder="密碼"
           tabindex="2"
@@ -63,10 +63,8 @@ export default {
   data() {
     return {
       loginForm: {
-        input: {
-          username: '',
-          password: ''
-        }
+        username: '',
+        password: '',
       },
       rules: {
         username: [{ required: true, message: '必填', trigger: 'blur' }],

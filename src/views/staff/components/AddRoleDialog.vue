@@ -75,7 +75,7 @@ export default {
           this.$refs.dialog.toggleLoadingFullScreen()
           try {
             this.formData.permissions = this.$refs.PermissionTree.getCheckedKeys()
-            await apiCreateRole({input: this.formData})
+            await apiCreateRole(this.formData)
             this.$showSuccessMessage("操作成功", this.afterSubmit)
           } catch (error) {
             this.$refs.dialog.toggleLoadingFullScreen()

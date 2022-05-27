@@ -45,6 +45,7 @@ export default {
   },
   data() {
     return {
+      roleId: 0,
       formData: {
         name: '',
         permissions: [],
@@ -57,17 +58,17 @@ export default {
   },
   methods: {
     show(id) {
-      this.formData.id = id
+      this.roleId = id
       this.fetchData()
       this.$refs.dialog.show()
     },
     async fetchData() {
       try {
         this.$refs.dialog.toggleLoadingDialog()
-        const { id } = this.formData
-        const { data } = await apiGetRoleDetail({ input: id })
-        this.$refs.PermissionTree.setCheckedKeys(data.getRole.role.permissions)
-        this.formData = { ...this.formData, ...data.getRole.role }
+        const { data } = await apiGetRoleDetail(this.roleId)
+        this.$refs.PermissionTree.setCheckedKeys(data.permissions)
+        this.formData.name = data.name
+        this.formData.permissions = data.permissions
       } catch (err) {
         console.log(err)
       } finally {
@@ -83,7 +84,7 @@ export default {
           this.$refs.dialog.toggleLoadingFullScreen()
           try {
             this.formData.permissions = this.$refs.PermissionTree.getCheckedKeys()
-            await apiUpdateRole({input: this.formData})
+            await apiUpdateRole(this.roleId, this.formData)
             this.$showSuccessMessage("操作成功", this.afterSubmit)
           } catch (error) {
             this.$refs.dialog.toggleLoadingFullScreen()

@@ -1,63 +1,45 @@
-import apolloProvider from "@/utils/gql";
-import {gql} from "apollo-boost";
+import httpRequest from "@/utils/http";
 
-export const apiGetRoleList = async (data) => {
-	return await apolloProvider.defaultClient.query({
-		query: gql`query listRole($filter: ListRoleInput!, $pagination: PaginationInput!) {
-        listRole(filter: $filter, pagination: $pagination) {
-            roles {
-                id
-                name
-            }
-            pagination {
-                page
-                pageSize
-                total
-            }
-        }
-    }`,
-		variables: data,
+export const apiGetRoleList = async (query) => {
+	return httpRequest({
+		url: '/roles?' + query,
+		method: 'GET',
+	})
+}
+
+export const apiGetAllRoles = async () => {
+	return httpRequest({
+		url: '/roles/all',
+		method: 'GET',
 	})
 }
 
 export const apiCreateRole = async (data) => {
-	return await apolloProvider.defaultClient.mutate({
-		mutation: gql`mutation createRole($input: CreateRoleInput!) {
-        createRole(input: $input)
-    }`,
-		variables: data,
+	return httpRequest({
+		url: '/role',
+		method: 'POST',
+		data
 	})
 }
 
-export const apiGetRoleDetail = async (data) => {
-	return await apolloProvider.defaultClient.query({
-		query: gql`query getRole($input: Int64!) {
-        getRole(id: $input) {
-            role {
-                id
-                name
-                permissions
-            }
-        }
-    }`,
-		variables: data,
+export const apiGetRoleDetail = async (id) => {
+	return httpRequest({
+		url: '/role/' + id,
+		method: 'GET',
 	})
 }
 
-export const apiUpdateRole = async (data) => {
-	return await apolloProvider.defaultClient.mutate({
-		mutation: gql`mutation updateRole($input: UpdateRoleInput!) {
-        updateRole(input: $input)
-    }`,
-		variables: data,
+export const apiUpdateRole = async (id, data) => {
+	return httpRequest({
+		url: '/role/' + id,
+		method: 'PUT',
+		data
 	})
 }
 
-export const apiDeleteRole = async (data) => {
-	return await apolloProvider.defaultClient.mutate({
-		mutation: gql`mutation deleteRole($input: Int64!) {
-        deleteRole(id: $input)
-    }`,
-		variables: data,
+export const apiDeleteRole = async (id) => {
+	return httpRequest({
+		url: '/role/' + id,
+		method: 'DELETE',
 	})
 }

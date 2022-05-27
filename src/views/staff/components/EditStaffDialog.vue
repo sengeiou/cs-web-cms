@@ -8,7 +8,7 @@
           label-width="80px"
       >
         <el-form-item label="角色:" prop="roleID">
-          <el-select v-model="formData.roleID" placeholder="請選擇角色">
+          <el-select v-model="formData.role_id" placeholder="請選擇角色">
             <el-option
                 v-for="(role,idx) in roles"
                 :key="idx"
@@ -34,8 +34,8 @@
         <el-form-item label="狀態:" prop="status">
           <el-switch
               v-model="formData.status"
-              :active-value="'Enabled'"
-              :inactive-value="'Disabled'"
+              :active-value="1"
+              :inactive-value="2"
           />
         </el-form-item>
       </el-form>
@@ -49,8 +49,8 @@
 
 <script>
 import AppDialog from '@/components/AppDialog'
-import {apiGetStaffDetail, apiUpdateStaff} from "@/api/staff";
-import {apiGetRoleList} from "@/api/role";
+import {apiGetStaffDetail, apiGetStaffList, apiUpdateStaff} from "@/api/staff";
+import {apiGetAllRoles, apiGetRoleList} from "@/api/role";
 
 export default {
   name: 'EditStaffDialog',
@@ -59,14 +59,15 @@ export default {
   },
   data() {
     return {
+      staffId: 0,
       formData: {
-        id: 0,
+        role_id: 0,
         name: '',
         password: '',
-        status: 'Enabled'
+        status: 1,
       },
       rules: {
-        roleID: [{ required: true, message: '必填', trigger: 'blur' }],
+        role_id: [{ required: true, message: '必填', trigger: 'blur' }],
         name: [{ required: true, message: '必填', trigger: 'blur' }],
       },
       roles: [],
@@ -74,7 +75,7 @@ export default {
   },
   methods: {
     show(id) {
-      this.formData.id = id
+      this.staffId = id
       this.formData.password = ''
       this.fetchRoles()
       this.fetchData()
@@ -83,9 +84,10 @@ export default {
     async fetchData() {
       try {
         this.$refs.dialog.toggleLoadingDialog()
-        const { id } = this.formData
-        const { data } = await apiGetStaffDetail({ input: id })
-        this.formData = { ...this.formData, ...data.getStaff.staff }
+        const { data } = await apiGetStaffDetail(this.staffId)
+        this.formData.role_id = data.role_id
+        this.formData.name = data.name
+        this.formData.status = data.status
       } catch (err) {
         console.log(err)
       } finally {
@@ -100,7 +102,7 @@ export default {
         if (valid) {
           this.$refs.dialog.toggleLoadingFullScreen()
           try {
-            await apiUpdateStaff({input: this.formData})
+            await apiUpdateStaff(this.staffId, this.formData)
             this.$showSuccessMessage("操作成功", this.afterSubmit)
           } catch (error) {
             this.$refs.dialog.toggleLoadingFullScreen()
@@ -115,16 +117,8 @@ export default {
     async fetchRoles() {
       try {
         this.loading = true
-        const { data } = await apiGetRoleList({
-          filter: {
-            "name": ""
-          },
-          pagination: {
-            page: 1,
-            pageSize: 999,
-          }
-        })
-        this.roles = data.listRole.roles
+        const { data } = await apiGetAllRoles()
+        this.roles = data
         this.loading = false
       } catch (err) {
         console.log(err)

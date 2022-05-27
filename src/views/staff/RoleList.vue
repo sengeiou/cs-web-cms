@@ -2,7 +2,7 @@
   <div class="app-container" v-loading="loading">
     <AppPanel title="角色列表">
       <template v-slot:filter>
-        <el-input v-model="form.filter.name" placeholder="名稱" style="width: 200px;" />
+        <el-input v-model="form.name" placeholder="名稱" style="width: 200px;" />
         <el-button icon="el-icon-search" type="primary" @click="fetchData">搜尋</el-button>
         <el-button icon="el-icon-circle-close" @click="handleClear">清除</el-button>
       </template>
@@ -18,7 +18,7 @@
             :handle-delete="handleDelete"
         />
         <AppPagination
-            :data="form.pagination"
+            :data="pagination"
             @change="handleChange"
         />
       </template>
@@ -52,14 +52,12 @@ export default {
         name: '',
       },
       form: {
-        filter: {
-          name: '',
-        },
-        pagination: {
-          page: 1,
-          pageSize: 10,
-          total: 0,
-        }
+        name: '',
+      },
+      pagination: {
+        page: 1,
+        page_size: 10,
+        total: 0,
       },
       tableData: [],
       tableColumns: [
@@ -69,11 +67,11 @@ export default {
     }
   },
   created() {
-    this.fetchData()
+    this.fetchData(this.pagination)
   },
   methods: {
     flushTable() {
-      this.fetchData()
+      this.fetchData(this.pagination)
     },
     openDialogAdd() {
       this.$refs.AddRoleDialog.show()
@@ -81,13 +79,14 @@ export default {
     openDialogEdit(id) {
       this.$refs.EditRoleDialog.show(id)
     },
-    async fetchData() {
+    async fetchData(payload) {
       try {
         this.loading = true
-        delete this.form.pagination.total
-        const { data } = await apiGetRoleList(this.form)
-        this.tableData = data.listRole.roles
-        this.form.pagination = { ...data.listRole.pagination }
+        delete this.pagination.total
+        const params = new URLSearchParams({...this.form, ...(payload)});
+        const { data, pagination } = await apiGetRoleList(params.toString())
+        this.tableData = data
+        this.pagination = pagination
         this.loading = false
       } catch (err) {
         console.log(err)
@@ -95,16 +94,15 @@ export default {
       }
     },
     handleChange(payload) {
-      this.form.pagination = { ...payload }
-      this.fetchData()
+      this.fetchData(payload)
     },
     async handleDelete(id) {
       try {
         await this.$confirmDelete()
         this.loading = true
-        await apiDeleteRole({ input: id })
+        await apiDeleteRole(id)
         this.$showSuccessMessage("刪除成功")
-        await this.fetchData()
+        await this.fetchData(this.pagination)
         this.loading = false
       } catch (err) {
         console.log(err)
@@ -112,7 +110,7 @@ export default {
       }
     },
     handleClear() {
-      this.form.filter = { ...this.initFilter }
+      this.form = { ...this.initFilter }
     }
   },
 }

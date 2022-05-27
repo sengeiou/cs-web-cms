@@ -96,7 +96,7 @@ export default {
       try {
         this.loading = true
         const { data } = await apiGetAvailableStaff()
-        this.staffs = data.listAvailableStaff.staffs
+        this.staffs = data
       } catch (err) {
         console.log(err)
       } finally {

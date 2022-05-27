@@ -6,7 +6,7 @@
         :page-sizes="[10, 20, 30, 40]"
         layout="total, sizes, prev, pager, next, jumper"
         :current-page="paginationData.page"
-        :page-size="paginationData.pageSize"
+        :page-size="paginationData.page_size"
         :total="paginationData.total"
         :hide-on-single-page="false"
     >
@@ -21,7 +21,7 @@ export default {
     return {
       paginationData: {
         page: 1,
-        pageSize: 10,
+        page_size: 10,
         total: 0,
       },
     };

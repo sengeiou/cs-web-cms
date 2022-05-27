@@ -1,16 +1,19 @@
 import apolloProvider from "@/utils/gql";
 import {gql} from "apollo-boost";
+import httpRequest from '@/utils/http'
 
 export const apiAuthLogin = async (data) => {
-	return await apolloProvider.defaultClient.mutate({
-		mutation: gql`mutation login($input: LoginInput!) {
-        login(input: $input) {
-            staffID
-            username
-            token
-        }
-    }`,
-		variables: data,
+	return httpRequest({
+		url: '/auth/login',
+		method: 'POST',
+		data
+	})
+}
+
+export const apiGetStaffInfo = async () => {
+	return httpRequest({
+		url: '/auth/staff-info',
+		method: 'GET',
 	})
 }
 

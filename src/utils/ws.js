@@ -5,7 +5,7 @@ let socket = null;
 
 export const connectSocket = () => {
 	const token = getToken()
-	socket = new WebSocket(wsUrl+"?type=1&sid="+token);
+	socket = new WebSocket(wsUrl+"?type=staff&sid="+token);
 	socket.onopen = function() {
 		console.log("websocket connected!!");
 		store.commit("app/SET_WEBSOCKET_STATUS", true)

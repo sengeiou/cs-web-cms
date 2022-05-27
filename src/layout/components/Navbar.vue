@@ -60,10 +60,8 @@ export default {
       sidebar: 'app/sidebar',
       websocketStatus: 'app/websocketStatus',
       avatar: 'user/avatar',
+      servingStatus: 'user/servingStatus',
     }),
-    servingStatus() {
-      return this.$store.state.user.servingStatus
-    }
   },
   data() {
     return {
@@ -84,14 +82,21 @@ export default {
         this.$refs.EditAvatarDialog.show()
       } else {
         this.command = command
-        this.updateServingStatus(command)
+        switch (command) {
+          case 'Closed':
+            this.updateServingStatus(1)
+            break
+          case 'Serving':
+            this.updateServingStatus(2)
+            break
+        }
       }
     },
     async updateServingStatus(status) {
       try {
         this.loading = true
         await apiUpdateStaffServingStatus({
-          servingStatus: status
+          serving_status: status
         })
       } catch (err) {
         console.log(err)

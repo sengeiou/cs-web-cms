@@ -1,6 +1,6 @@
 import { constantRoutes, asyncRoutes } from '@/router'
-import {apiGetStaffInfo} from "@/api/staff";
 import {getPermissionKeys, permissionKeys} from "@/utils/authorities";
+import {apiGetStaffInfo} from "@/api/auth";
 
 const state = {
   routes: [],
@@ -47,11 +47,11 @@ const actions = {
     return new Promise(async (resolve, reject) => {
       apiGetStaffInfo()
         .then((response) => {
-          let staff = response.data.getStaff.staff
-          if (staff.roleID === 1) {
+          let staff = response.data
+          if (staff.role_id === 1) {
             commit('SET_ROUTE_KEYS', getPermissionKeys())
           } else {
-            commit('SET_ROUTE_KEYS', response.data.getStaff.staff.permissions)
+            commit('SET_ROUTE_KEYS', response.data.permissions)
           }
           resolve()
         })

@@ -8,7 +8,7 @@
         label-width="80px"
       >
         <el-form-item label="角色:" prop="roleID">
-          <el-select v-model="formData.roleID" placeholder="請選擇角色">
+          <el-select v-model="formData.role_id" placeholder="請選擇角色">
             <el-option
                 v-for="(role,idx) in roles"
                 :key="idx"
@@ -41,8 +41,8 @@
         <el-form-item label="狀態:" prop="status">
           <el-switch
             v-model="formData.status"
-            :active-value="'Enabled'"
-            :inactive-value="'Disabled'"
+            :active-value="1"
+            :inactive-value="2"
           />
         </el-form-item>
       </el-form>
@@ -59,7 +59,7 @@ import { deepCopy } from '@/utils'
 import {apiCreateStaff} from "@/api/staff";
 import AppDialog from "@/components/AppDialog";
 import {apiGetCategoryList} from "@/api/fast-message";
-import {apiGetRoleList} from "@/api/role";
+import {apiGetAllRoles, apiGetRoleList} from "@/api/role";
 
 export default {
   name: 'AddStaffDialog',
@@ -69,21 +69,21 @@ export default {
   data() {
     return {
       initialFormData: {
-        roleID: null,
+        role_id: null,
         name: '',
         username: '',
         password: '',
-        status: 'Enabled'
+        status: 1
       },
       formData: {
-        roleID: null,
+        role_id: null,
         name: '',
         username: '',
         password: '',
-        status: 'Enabled'
+        status: 1
       },
       rules: {
-        roleID: [{ required: true, message: '必填', trigger: 'blur' }],
+        role_id: [{ required: true, message: '必填', trigger: 'blur' }],
         name: [{ required: true, message: '必填', trigger: 'blur' }],
         username: [{ required: true, message: '必填', trigger: 'blur' }],
         password: [{ required: true, message: '必填', trigger: 'blur' }],
@@ -105,7 +105,7 @@ export default {
         if (valid) {
           this.$refs.dialog.toggleLoadingFullScreen()
           try {
-            await apiCreateStaff({input: this.formData})
+            await apiCreateStaff(this.formData)
             this.$showSuccessMessage("操作成功", this.afterSubmit)
           } catch (error) {
             this.$refs.dialog.toggleLoadingFullScreen()
@@ -120,16 +120,8 @@ export default {
     async fetchRoles() {
       try {
         this.loading = true
-        const { data } = await apiGetRoleList({
-          filter: {
-            "name": ""
-          },
-          pagination: {
-            page: 1,
-            pageSize: 999,
-          }
-        })
-        this.roles = data.listRole.roles
+        const { data } = await apiGetAllRoles()
+        this.roles = data
         this.loading = false
       } catch (err) {
         console.log(err)

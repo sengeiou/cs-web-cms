@@ -37,17 +37,17 @@ export default {
         { prop: 'id', label: '編號', align: "center", width: 80 },
         { prop: 'name', label: '名稱', align: "center" },
         {
-          prop: 'servingStatus',
+          prop: 'serving_status',
           label: '服務狀態',
           align: "center",
           width: 100,
           render: (h, param) => {
-            switch (param.row.servingStatus) {
-              case 'Closed':
+            switch (param.row.serving_status) {
+              case 1:
                 return <el-tag effect="dark" type="danger">關閉</el-tag>
-              case 'Serving':
+              case 2:
                 return <el-tag effect="dark" type="success">服務中</el-tag>
-              case 'Pending':
+              case 3:
                 return <el-tag effect="dark" type="warning">閒置</el-tag>
             }
           }
@@ -68,18 +68,15 @@ export default {
     async fetchData() {
       try {
         this.loading = true
-        const { data } = await apiGetStaffList({
-          filter: {
-            name: '',
-            status: 'Enabled',
-            servingStatus: 'All',
-          },
-          pagination: {
-            page: 1,
-            pageSize: 100
-          }
-        })
-        this.tableData = data.listStaff.staffs
+        const params = new URLSearchParams({
+          name: '',
+          status: 1,
+          serving_status: 0,
+          page: 1,
+          page_size: 100
+        });
+        const { data } = await apiGetStaffList(params.toString())
+        this.tableData = data
         this.loading = false
       } catch (err) {
         console.log(err)
