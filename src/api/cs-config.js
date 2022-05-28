@@ -1,25 +1,18 @@
 import apolloProvider from "@/utils/gql";
 import {gql} from "apollo-boost";
+import httpRequest from "@/utils/http";
 
 export const apiGetCsConfig = async () => {
-	return await apolloProvider.defaultClient.query({
-		query: gql`query getCsConfig {
-        getCsConfig {
-            config {
-                maxMember
-                memberPendingExpire
-								greetingText
-            }
-        }
-    }`,
+	return httpRequest({
+		url: '/cs-config',
+		method: 'GET',
 	})
 }
 
 export const apiUpdateCsConfig = async (data) => {
-	return await apolloProvider.defaultClient.mutate({
-		mutation: gql`mutation updateCsConfig($input: UpdateCsConfigInput!) {
-        updateCsConfig(input: $input)
-    }`,
-		variables: data,
+	return httpRequest({
+		url: '/cs-config',
+		method: 'PUT',
+		data
 	})
 }

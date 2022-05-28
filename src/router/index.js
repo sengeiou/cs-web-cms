@@ -89,10 +89,16 @@ export const asyncRoutes = [
         meta: { title: '標籤列表', icon: 'tag', key: 'CsSetting.TagList' }
       },
       {
-        path: '/cs-setting/fast-message-list',
-        name: 'FastMessageList',
-        component: () => import('@/views/cs-setting/fast-message/FastMessageList'),
-        meta: { title: '快捷回覆列表', icon: 'send', key: 'CsSetting.FastMessageList' }
+        path: '/cs-setting/fast-reply-list',
+        name: 'FastReplyList',
+        component: () => import('@/views/cs-setting/fast-reply/FastReplyList'),
+        meta: { title: '快捷回覆列表', icon: 'send', key: 'CsSetting.FastReplyList' }
+      },
+      {
+        path: '/cs-setting/notice-list',
+        name: 'NoticeList',
+        component: () => import('@/views/cs-setting/notice/NoticeList'),
+        meta: { title: '通知列表', icon: 'notice', key: 'CsSetting.NoticeList' }
       },
       {
         path: '/cs-setting/config-setting',

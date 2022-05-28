@@ -44,7 +44,6 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import LangSelect from '@/components/LangSelect'
-import {apiGetFastMessageGroup} from "@/api/fast-message";
 import {apiUpdateStaffServingStatus} from "@/api/staff";
 import EditAvatarDialog from "@/layout/components/EditAvatarDialog";
 

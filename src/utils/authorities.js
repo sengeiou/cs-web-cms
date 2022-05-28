@@ -2,7 +2,8 @@ const permissionKeys = {
 	"CsSystem": "客服系統",
 	"CsSetting": "客服設置",
 	"CsSetting.TagList": "標籤列表",
-	"CsSetting.FastMessageList": "快捷訊息列表",
+	"CsSetting.FastReplyList": "快捷訊息列表",
+	"CsSetting.NoticeList": "通知列表",
 	"CsSetting.ConfigSetting": "參數配置",
 	"HistoryRecord": "歷史紀錄",
 	"HistoryRecord.RoomList": "諮詢房列表",
@@ -35,8 +36,12 @@ export const permissionTree = [
 				label: "標籤列表",
 			},
 			{
-				id: "CsSetting.FastMessageList",
+				id: "CsSetting.FastReplyList",
 				label: "快捷訊息列表",
+			},
+			{
+				id: "CsSetting.NoticeList",
+				label: "通知列表",
 			},
 			{
 				id: "CsSetting.ConfigSetting",

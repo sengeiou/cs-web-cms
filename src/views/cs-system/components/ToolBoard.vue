@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import {apiGetCategoryList, apiGetFastMessageGroup} from "@/api/fast-message";
+import {apiGetCategoryList, apiGetFastReplyGroup} from "@/api/fast-reply";
 import {sendSocketMessage} from "@/utils/ws";
 import {mapGetters} from "vuex";
 import {deepCopy} from "@/utils";
@@ -58,7 +58,7 @@ import {deepCopy} from "@/utils";
 export default {
   name: "ToolBoard",
   created() {
-    this.fetchFastMessageGroup()
+    this.fetchFastReplyGroup()
   },
   computed: {
     ...mapGetters({
@@ -75,12 +75,12 @@ export default {
     }
   },
   methods: {
-    async fetchFastMessageGroup() {
+    async fetchFastReplyGroup() {
       try {
         this.loading = true
-        const { data } = await apiGetFastMessageGroup()
-        this.group = data.listFastMessageGroup.group
-        this.tmpGroup = data.listFastMessageGroup.group
+        const { data } = await apiGetFastReplyGroup()
+        this.group = data.listFastReplyGroup.group
+        this.tmpGroup = data.listFastReplyGroup.group
       } catch (err) {
         console.log(err)
       } finally {

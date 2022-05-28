@@ -1,8 +1,13 @@
 <template>
   <div class="app-container" v-loading="loading">
-    <AppPanel title="標籤列表">
+    <AppPanel title="通知列表">
       <template v-slot:filter>
-        <el-input v-model="form.name" placeholder="名稱" style="width: 200px;" />
+        <el-input v-model="form.content" placeholder="內容" style="width: 200px;" />
+        <el-select style="width: 100px;" v-model="form.status" placeholder="狀態">
+          <el-option label="全部" :value="0"></el-option>
+          <el-option label="啟用" :value="1"></el-option>
+          <el-option label="禁用" :value="2"></el-option>
+        </el-select>
         <el-button icon="el-icon-search" type="primary" @click="fetchData(pagination)">搜尋</el-button>
         <el-button icon="el-icon-circle-close" @click="handleClear">清除</el-button>
       </template>
@@ -23,37 +28,37 @@
         />
       </template>
     </AppPanel>
-    <AddTagDialog ref="AddTagDialog" @flush-parent="flushTable" />
-    <EditTagDialog ref="EditTagDialog" @flush-parent="flushTable" />
+    <AddNoticeDialog ref="AddNoticeDialog" @flush-parent="flushTable" />
+    <EditNoticeDialog ref="EditNoticeDialog" @flush-parent="flushTable" />
   </div>
 </template>
 
 <script>
-import AddTagDialog from '@/views/cs-setting/tag/components/AddTagDialog'
-import EditTagDialog from '@/views/cs-setting/tag/components/EditTagDialog'
-import {apiDeleteTag, apiGetTagList} from "@/api/tag";
+import AddNoticeDialog from '@/views/cs-setting/notice/components/AddNoticeDialog'
+import EditNoticeDialog from '@/views/cs-setting/notice/components/EditNoticeDialog'
 import AppTable from "@/components/AppTable";
 import AppPagination from "@/components/AppPagination";
 import AppPanel from "@/components/AppPanel";
+import {apiDeleteNotice, apiGetNoticeList} from "@/api/notice";
 
 export default {
-  name: 'TagList',
+  name: 'NoticeList',
   components: {
     AppPanel,
     AppTable,
     AppPagination,
-    AddTagDialog,
-    EditTagDialog,
+    AddNoticeDialog,
+    EditNoticeDialog,
   },
   data() {
     return {
       loading: false,
       initFilter: {
-        name: '',
+        content: '',
         status: 0,
       },
       form: {
-        name: '',
+        content: '',
         status: 0,
       },
       pagination: {
@@ -63,11 +68,16 @@ export default {
       },
       tableData: [],
       tableColumns: [
-        { prop: 'id', label: '編號' },
-        { prop: 'name', label: '名稱' },
+        { prop: 'id', label: '編號', align: "center", width: 80 },
+        { prop: 'title', label: '標題' },
+        { prop: 'content', label: '內容' },
+        { prop: 'start_at', label: '開始時間' },
+        { prop: 'end_at', label: '結束時間' },
         {
           prop: 'status',
           label: '狀態',
+          align: "center",
+          width: 100,
           render: (h, scope) => {
             switch (scope.row.status) {
               case 1:
@@ -88,16 +98,16 @@ export default {
       this.fetchData(this.pagination)
     },
     openDialogAdd() {
-      this.$refs.AddTagDialog.show()
+      this.$refs.AddNoticeDialog.show()
     },
     openDialogEdit(id) {
-      this.$refs.EditTagDialog.show(id)
+      this.$refs.EditNoticeDialog.show(id)
     },
     async fetchData(payload) {
       try {
         this.loading = true
         const params = new URLSearchParams({...this.form, ...(payload)});
-        const { data, pagination } = await apiGetTagList(params.toString())
+        const { data, pagination } = await apiGetNoticeList(params.toString())
         this.tableData = data
         this.pagination = pagination
       } catch (err) {
@@ -113,7 +123,7 @@ export default {
       try {
         await this.$confirmDelete()
         this.loading = true
-        await apiDeleteTag(id)
+        await apiDeleteNotice(id)
         this.$showSuccessMessage("刪除成功")
         await this.fetchData(this.pagination)
         this.loading = false

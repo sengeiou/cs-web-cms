@@ -1,22 +1,12 @@
 <template>
-  <AppDialog ref="dialog" title="編輯快捷消息" width="500px">
+  <AppDialog ref="dialog" title="編輯通知" width="500px" top="5vh">
     <div slot="body">
       <el-form
           ref="dialogForm"
           :model="formData"
           :rules="rules"
-          label-width="80px"
+          label-width="100px"
       >
-        <el-form-item label="分類:" prop="categoryID">
-          <el-select v-model="formData.categoryID" placeholder="請選擇">
-            <el-option
-                v-for="(category,idx) in categories"
-                :key="idx"
-                :label="category.name"
-                :value="category.id">
-            </el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item label="標題:" prop="title">
           <el-input
               v-model="formData.title"
@@ -33,21 +23,38 @@
               :autosize="true"
               type="textarea"
               resize="none"
-              maxlength="250"
-              show-word-limit
+              maxlength="60"
+          />
+        </el-form-item>
+        <el-form-item label="開始時間:" prop="start_at">
+          <el-date-picker
+              v-model="formData.start_at"
+              type="datetime"
+              placeholder="請選擇時間"
+              size="small"
+              value-format="yyyy-MM-dd HH:mm:ss"
+          />
+        </el-form-item>
+        <el-form-item label="結束時間:" prop="end_at">
+          <el-date-picker
+              v-model="formData.end_at"
+              type="datetime"
+              placeholder="請選擇時間"
+              size="small"
+              value-format="yyyy-MM-dd HH:mm:ss"
           />
         </el-form-item>
         <el-form-item label="狀態:" prop="status">
           <el-switch
               v-model="formData.status"
-              :active-value="'Enabled'"
-              :inactive-value="'Disabled'"
+              :active-value="1"
+              :inactive-value="2"
           />
         </el-form-item>
       </el-form>
     </div>
     <div slot="footer">
-      <el-button @click="handleCancel">取消</el-button>
+      <el-button type="primary" plain @click="handleCancel">取消</el-button>
       <el-button type="primary" @click="submitForm">確認</el-button>
     </div>
   </AppDialog>
@@ -55,43 +62,48 @@
 
 <script>
 import AppDialog from '@/components/AppDialog'
-import {apiGetCategoryList, apiGetFastMessageDetail, apiUpdateFastMessage} from "@/api/fast-message";
+import {apiGetNoticeDetail, apiUpdateNotice} from "@/api/notice";
 
 export default {
-  name: 'EditFastMessageDialog',
+  name: 'EditNoticeDialog',
   components: {
     AppDialog
   },
   data() {
     return {
-      categories: [],
+      id: 0,
+      loading: false,
       formData: {
-        id: 0,
-        categoryID: null,
         title: '',
         content: '',
-        status: 'Enabled'
+        start_at: '',
+        end_at: '',
+        status: 1
       },
       rules: {
-        categoryID: [{ required: true, message: '必填', trigger: 'blur' }],
         title: [{ required: true, message: '必填', trigger: 'blur' }],
         content: [{ required: true, message: '必填', trigger: 'blur' }],
+        start_at: [{ required: true, message: '必填', trigger: 'blur' }],
+        end_at: [{ required: true, message: '必填', trigger: 'blur' }],
       },
     }
   },
   methods: {
     show(id) {
-      this.formData.id = id
-      this.fetchCategories()
+      this.id = id
       this.fetchData()
       this.$refs.dialog.show()
     },
     async fetchData() {
       try {
+        this.loading = true
         this.$refs.dialog.toggleLoadingDialog()
-        const { id } = this.formData
-        const { data } = await apiGetFastMessageDetail({ input: id })
-        this.formData = { ...this.formData, ...data.getFastMessage.fastMessage }
+        const { data } = await apiGetNoticeDetail(this.id)
+        this.formData.title = data.title
+        this.formData.content = data.content
+        this.formData.start_at = data.start_at
+        this.formData.end_at = data.end_at
+        this.formData.status = data.status
         this.$refs.dialog.toggleLoadingDialog()
       } catch (err) {
         console.log(err)
@@ -106,7 +118,7 @@ export default {
         if (valid) {
           this.$refs.dialog.toggleLoadingFullScreen()
           try {
-            await apiUpdateFastMessage({input: this.formData})
+            await apiUpdateNotice(this.id, this.formData)
             this.$showSuccessMessage("操作成功", this.afterSubmit)
           } catch (error) {
             this.$refs.dialog.toggleLoadingFullScreen()
@@ -117,18 +129,7 @@ export default {
     afterSubmit() {
       this.$refs.dialog.afterSubmit()
       this.$emit('flush-parent')
-    },
-    async fetchCategories() {
-      try {
-        this.loading = true
-        const { data } = await apiGetCategoryList()
-        this.categories = data.listFastMessageCategory.categories
-        this.loading = false
-      } catch (err) {
-        console.log(err)
-        this.loading = false
-      }
-    },
+    }
   }
 }
 </script>

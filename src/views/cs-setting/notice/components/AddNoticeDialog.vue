@@ -1,47 +1,54 @@
 <template>
-  <AppDialog ref="dialog" title="新增快捷消息" width="500px">
+  <AppDialog ref="dialog" title="新增通知" width="500px">
     <div slot="body">
       <el-form
         ref="dialogForm"
         :model="formData"
         :rules="rules"
-        label-width="80px"
+        label-width="100px"
       >
-        <el-form-item label="分類:" prop="categoryID">
-          <el-select v-model="formData.categoryID" placeholder="請選擇">
-            <el-option
-                v-for="(category,idx) in categories"
-                :key="idx"
-                :label="category.name"
-                :value="category.id">
-            </el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item label="標題:" prop="title">
           <el-input
-              v-model="formData.title"
-              size="small"
-              style="width: 300px"
+            v-model="formData.title"
+            size="small"
+            style="width: 300px"
           />
         </el-form-item>
         <el-form-item label="內容:" prop="content">
           <el-input
-            style="width: 300px"
-            v-model="formData.content"
-            placeholder="請輸入內容"
-            size="small"
-            :autosize="true"
-            type="textarea"
-            resize="none"
-            maxlength="250"
-            show-word-limit
+              style="width: 300px"
+              v-model="formData.content"
+              placeholder="請輸入內容"
+              size="small"
+              :autosize="true"
+              type="textarea"
+              resize="none"
+              maxlength="60"
+          />
+        </el-form-item>
+        <el-form-item label="開始時間:" prop="start_at">
+          <el-date-picker
+              v-model="formData.start_at"
+              type="datetime"
+              placeholder="請選擇時間"
+              size="small"
+              value-format="yyyy-MM-dd HH:mm:ss"
+          />
+        </el-form-item>
+        <el-form-item label="結束時間:" prop="end_at">
+          <el-date-picker
+              v-model="formData.end_at"
+              type="datetime"
+              placeholder="請選擇時間"
+              size="small"
+              value-format="yyyy-MM-dd HH:mm:ss"
           />
         </el-form-item>
         <el-form-item label="狀態:" prop="status">
           <el-switch
             v-model="formData.status"
-            :active-value="'Enabled'"
-            :inactive-value="'Disabled'"
+            :active-value="1"
+            :inactive-value="2"
           />
         </el-form-item>
       </el-form>
@@ -56,39 +63,40 @@
 <script>
 import AppDialog from '@/components/AppDialog'
 import { deepCopy } from '@/utils'
-import {apiCreateFastMessage, apiGetCategoryList} from "@/api/fast-message";
+import {apiCreateNotice} from "@/api/notice";
 
 export default {
-  name: 'AddFastMessageDialog',
+  name: 'AddNoticeDialog',
   components: {
     AppDialog
   },
   data() {
     return {
       initialFormData: {
-        categoryID: null,
         title: '',
         content: '',
-        status: 'Enabled'
+        start_at: '',
+        end_at: '',
+        status: 1
       },
       formData: {
-        categoryID: null,
         title: '',
         content: '',
-        status: 'Enabled'
+        start_at: '',
+        end_at: '',
+        status: 1
       },
       rules: {
-        categoryID: [{ required: true, message: '必填', trigger: 'blur' }],
         title: [{ required: true, message: '必填', trigger: 'blur' }],
         content: [{ required: true, message: '必填', trigger: 'blur' }],
+        start_at: [{ required: true, message: '必填', trigger: 'blur' }],
+        end_at: [{ required: true, message: '必填', trigger: 'blur' }],
       },
-      categories: [],
     }
   },
   methods: {
     show() {
       this.formData = deepCopy(this.initialFormData)
-      this.fetchCategories()
       this.$refs.dialog.show()
     },
     handleCancel() {
@@ -99,7 +107,7 @@ export default {
         if (valid) {
           this.$refs.dialog.toggleLoadingFullScreen()
           try {
-            await apiCreateFastMessage({input: this.formData})
+            await apiCreateNotice(this.formData)
             this.$showSuccessMessage("操作成功", this.afterSubmit)
           } catch (error) {
             this.$refs.dialog.toggleLoadingFullScreen()
@@ -110,18 +118,7 @@ export default {
     afterSubmit() {
       this.$refs.dialog.afterSubmit()
       this.$emit('flush-parent')
-    },
-    async fetchCategories() {
-      try {
-        this.loading = true
-        const { data } = await apiGetCategoryList()
-        this.categories = data.listFastMessageCategory.categories
-        this.loading = false
-      } catch (err) {
-        console.log(err)
-        this.loading = false
-      }
-    },
+    }
   }
 }
 </script>

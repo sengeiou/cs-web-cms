@@ -9,26 +9,26 @@
             label-width="130px"
             label-position="left"
         >
-          <el-form-item label="服務上限人數:" prop="maxMember">
+          <el-form-item label="服務上限人數:" prop="max_member">
             <el-input
-                v-model="form.maxMember"
+                v-model="form.max_member"
                 style="width: 140px"
             >
               <template slot="append">人</template>
             </el-input>
           </el-form-item>
-          <el-form-item label="用戶閒置時間:" prop="memberPendingExpire">
+          <el-form-item label="用戶閒置時間:" prop="member_pending_expire">
             <el-input
-                v-model="form.memberPendingExpire"
+                v-model="form.member_pending_expire"
                 style="width: 140px"
             >
               <template slot="append">分鐘</template>
             </el-input>
           </el-form-item>
-          <el-form-item label="問候語:" prop="greetingText">
+          <el-form-item label="問候語:" prop="greeting_text">
             <el-input
                 type="textarea"
-                v-model="form.greetingText"
+                v-model="form.greeting_text"
                 style="width: 300px"
                 rows="5"
             />
@@ -54,14 +54,14 @@ export default {
       testNumber: 1000000,
       loading: false,
       form: {
-        maxMember: 0,
-        memberPendingExpire: 0,
-        greetingText: "",
+        max_member: 0,
+        member_pending_expire: 0,
+        greeting_text: "",
       },
       rules: {
-        maxMember: [{ required: true, message: '必填', trigger: 'blur' }],
-        memberPendingExpire: [{ required: true, message: '必填', trigger: 'blur' }],
-        greetingText: [{ required: true, message: '必填', trigger: 'blur' }],
+        max_member: [{ required: true, message: '必填', trigger: 'blur' }],
+        member_pending_expire: [{ required: true, message: '必填', trigger: 'blur' }],
+        greeting_text: [{ required: true, message: '必填', trigger: 'blur' }],
       },
     }
   },
@@ -74,7 +74,9 @@ export default {
         if (valid) {
           this.loading = true
           try {
-            await apiUpdateCsConfig({input: this.form})
+            this.form.max_member = parseInt(this.form.max_member, 10)
+            this.form.member_pending_expire = parseInt(this.form.member_pending_expire, 10)
+            await apiUpdateCsConfig(this.form)
             this.$showSuccessMessage("保存成功")
             await this.fetchData()
             this.loading = false
@@ -89,7 +91,7 @@ export default {
       try {
         this.loading = true
         const { data } = await apiGetCsConfig()
-        this.form = {...data.getCsConfig.config}
+        this.form = {...data}
         this.loading = false
       } catch (err) {
         console.log(err)

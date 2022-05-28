@@ -1,64 +1,38 @@
-import apolloProvider from "@/utils/gql";
-import {gql} from "apollo-boost";
+import httpRequest from "@/utils/http";
 
-export const apiGetTagList = async (data) => {
-	return await apolloProvider.defaultClient.query({
-		query: gql`query listTag($filter: ListTagInput!, $pagination: PaginationInput!) {
-        listTag(filter: $filter, pagination: $pagination) {
-            tags {
-                id
-                name
-                status
-            }
-            pagination {
-                page
-                pageSize
-                total
-            }
-        }
-    }`,
-		variables: data,
+export const apiGetTagList = async (query) => {
+	return httpRequest({
+		url: '/tags?' + query,
+		method: 'GET',
 	})
 }
 
 export const apiCreateTag = async (data) => {
-	return await apolloProvider.defaultClient.mutate({
-		mutation: gql`mutation createTag($input: CreateTagInput!) {
-        createTag(input: $input)
-    }`,
-		variables: data,
+	return httpRequest({
+		url: '/tag',
+		method: 'POST',
+		data
 	})
 }
 
-export const apiGetTagDetail = async (data) => {
-	return await apolloProvider.defaultClient.query({
-		query: gql`query getTag($input: Int64!) {
-        getTag(id: $input) {
-            tag {
-                id
-                name
-                status
-            }
-        }
-    }`,
-		variables: data,
+export const apiGetTagDetail = async (id) => {
+	return httpRequest({
+		url: '/tag/' + id,
+		method: 'GET',
 	})
 }
 
-export const apiUpdateTag = async (data) => {
-	return await apolloProvider.defaultClient.mutate({
-		mutation: gql`mutation updateTag($input: UpdateTagInput!) {
-        updateTag(input: $input)
-    }`,
-		variables: data,
+export const apiUpdateTag = async (id, data) => {
+	return httpRequest({
+		url: '/tag/' + id,
+		method: 'PUT',
+		data
 	})
 }
 
-export const apiDeleteTag = async (data) => {
-	return await apolloProvider.defaultClient.mutate({
-		mutation: gql`mutation deleteTag($input: Int64!) {
-        deleteTag(id: $input)
-    }`,
-		variables: data,
+export const apiDeleteTag = async (id) => {
+	return httpRequest({
+		url: '/tag/' + id,
+		method: 'DELETE',
 	})
 }

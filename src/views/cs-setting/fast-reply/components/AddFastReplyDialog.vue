@@ -1,5 +1,5 @@
 <template>
-  <AppDialog ref="dialog" title="新增職員" width="500px">
+  <AppDialog ref="dialog" title="新增快捷消息" width="500px">
     <div slot="body">
       <el-form
         ref="dialogForm"
@@ -7,35 +7,34 @@
         :rules="rules"
         label-width="80px"
       >
-        <el-form-item label="角色:" prop="roleID">
-          <el-select v-model="formData.role_id" placeholder="請選擇角色">
+        <el-form-item label="分類:" prop="category_id">
+          <el-select v-model="formData.category_id" placeholder="請選擇">
             <el-option
-                v-for="(role,idx) in roles"
+                v-for="(category,idx) in categories"
                 :key="idx"
-                :label="role.name"
-                :value="role.id">
+                :label="category.value"
+                :value="category.id">
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="名稱:" prop="name">
+        <el-form-item label="標題:" prop="title">
           <el-input
-            v-model="formData.name"
-            size="small"
+              v-model="formData.title"
+              size="small"
+              style="width: 300px"
+          />
+        </el-form-item>
+        <el-form-item label="內容:" prop="content">
+          <el-input
             style="width: 300px"
-          />
-        </el-form-item>
-        <el-form-item label="用戶名:" prop="username">
-          <el-input
-              v-model="formData.username"
-              size="small"
-              style="width: 300px"
-          />
-        </el-form-item>
-        <el-form-item label="密碼:" prop="password">
-          <el-input
-              v-model="formData.password"
-              size="small"
-              style="width: 300px"
+            v-model="formData.content"
+            placeholder="請輸入內容"
+            size="small"
+            :autosize="true"
+            type="textarea"
+            resize="none"
+            maxlength="250"
+            show-word-limit
           />
         </el-form-item>
         <el-form-item label="狀態:" prop="status">
@@ -55,45 +54,41 @@
 </template>
 
 <script>
+import AppDialog from '@/components/AppDialog'
 import { deepCopy } from '@/utils'
-import {apiCreateStaff} from "@/api/staff";
-import AppDialog from "@/components/AppDialog";
-import {apiGetAllRoles} from "@/api/role";
+import {apiCreateFastReply, apiGetCategoryList} from "@/api/fast-reply";
 
 export default {
-  name: 'AddStaffDialog',
+  name: 'AddFastReplyDialog',
   components: {
     AppDialog
   },
   data() {
     return {
       initialFormData: {
-        role_id: null,
-        name: '',
-        username: '',
-        password: '',
+        category_id: null,
+        title: '',
+        content: '',
         status: 1
       },
       formData: {
-        role_id: null,
-        name: '',
-        username: '',
-        password: '',
+        category_id: null,
+        title: '',
+        content: '',
         status: 1
       },
       rules: {
-        role_id: [{ required: true, message: '必填', trigger: 'blur' }],
-        name: [{ required: true, message: '必填', trigger: 'blur' }],
-        username: [{ required: true, message: '必填', trigger: 'blur' }],
-        password: [{ required: true, message: '必填', trigger: 'blur' }],
+        category_id: [{ required: true, message: '必填', trigger: 'blur' }],
+        title: [{ required: true, message: '必填', trigger: 'blur' }],
+        content: [{ required: true, message: '必填', trigger: 'blur' }],
       },
-      roles: [],
+      categories: [],
     }
   },
   methods: {
     show() {
       this.formData = deepCopy(this.initialFormData)
-      this.fetchRoles()
+      this.fetchCategories()
       this.$refs.dialog.show()
     },
     handleCancel() {
@@ -104,7 +99,7 @@ export default {
         if (valid) {
           this.$refs.dialog.toggleLoadingFullScreen()
           try {
-            await apiCreateStaff(this.formData)
+            await apiCreateFastReply(this.formData)
             this.$showSuccessMessage("操作成功", this.afterSubmit)
           } catch (error) {
             this.$refs.dialog.toggleLoadingFullScreen()
@@ -116,11 +111,11 @@ export default {
       this.$refs.dialog.afterSubmit()
       this.$emit('flush-parent')
     },
-    async fetchRoles() {
+    async fetchCategories() {
       try {
         this.loading = true
-        const { data } = await apiGetAllRoles()
-        this.roles = data
+        const { data } = await apiGetCategoryList()
+        this.categories = data
         this.loading = false
       } catch (err) {
         console.log(err)

@@ -16,7 +16,7 @@
         </el-form-item>
         <el-form-item label="現有:">
           <template v-for="(category, idx) in categories">
-            <el-tag :key="idx" type="warning" effect="dark" style="display: inline-block;margin-right: 14px;">{{category.name}}</el-tag>
+            <el-tag :key="idx" type="warning" effect="dark" style="display: inline-block;margin-right: 14px;">{{category.value}}</el-tag>
           </template>
         </el-form-item>
       </el-form>
@@ -31,7 +31,7 @@
 <script>
 import AppDialog from '@/components/AppDialog'
 import { deepCopy } from '@/utils'
-import {apiCreateCategory, apiGetCategoryList} from "@/api/fast-message";
+import {apiCreateCategory, apiGetCategoryList} from "@/api/fast-reply";
 
 export default {
   name: 'AddCategoryDialog',
@@ -66,7 +66,7 @@ export default {
         if (valid) {
           this.$refs.dialog.toggleLoadingFullScreen()
           try {
-            await apiCreateCategory({input: this.formData})
+            await apiCreateCategory(this.formData)
             this.$showSuccessMessage("操作成功", this.afterSubmit)
           } catch (error) {
             this.$refs.dialog.toggleLoadingFullScreen()
@@ -82,7 +82,7 @@ export default {
       try {
         this.loading = true
         const { data } = await apiGetCategoryList()
-        this.categories = data.listFastMessageCategory.categories
+        this.categories = data
       } catch (err) {
         console.log(err)
       } finally {

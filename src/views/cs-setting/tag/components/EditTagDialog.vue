@@ -17,8 +17,8 @@
         <el-form-item label="狀態:" prop="status">
           <el-switch
               v-model="formData.status"
-              :active-value="'Enabled'"
-              :inactive-value="'Disabled'"
+              :active-value="1"
+              :inactive-value="2"
           />
         </el-form-item>
       </el-form>
@@ -41,11 +41,11 @@ export default {
   },
   data() {
     return {
+      tagId: 0,
       loading: false,
       formData: {
-        id: 0,
         name: '',
-        status: 'Enabled'
+        status: 1
       },
       rules: {
         name: [{ required: true, message: '必填', trigger: 'blur' }],
@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     show(id) {
-      this.formData.id = id
+      this.tagId = id
       this.fetchData()
       this.$refs.dialog.show()
     },
@@ -62,9 +62,9 @@ export default {
       try {
         this.loading = true
         this.$refs.dialog.toggleLoadingDialog()
-        const { id } = this.formData
-        const { data } = await apiGetTagDetail({ input: id })
-        this.formData = { ...this.formData, ...data.getTag.tag }
+        const { data } = await apiGetTagDetail(this.tagId)
+        this.formData.name = data.name
+        this.formData.status = data.status
         this.$refs.dialog.toggleLoadingDialog()
       } catch (err) {
         console.log(err)
@@ -79,7 +79,7 @@ export default {
         if (valid) {
           this.$refs.dialog.toggleLoadingFullScreen()
           try {
-            await apiUpdateTag({input: this.formData})
+            await apiUpdateTag(this.tagId, this.formData)
             this.$showSuccessMessage("操作成功", this.afterSubmit)
           } catch (error) {
             this.$refs.dialog.toggleLoadingFullScreen()
