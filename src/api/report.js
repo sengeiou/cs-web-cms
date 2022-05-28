@@ -1,34 +1,15 @@
-import apolloProvider from "@/utils/gql";
-import {gql} from "apollo-boost";
+import httpRequest from "@/utils/http";
 
-export const apiGetDailyTagReport = async (data) => {
-	return await apolloProvider.defaultClient.query({
-		query: gql`query listDailyTagReport($filter: ListDailyTagReportInput!) {
-        listDailyTagReport(filter: $filter) {
-            columns {
-                label
-                key
-            }
-            items {
-                date
-                jsonData
-            }
-        }
-    }`,
-		variables: data,
+export const apiGetDailyTagReport = async (query) => {
+	return httpRequest({
+		url: '/report/daily-tag?' + query ,
+		method: 'GET',
 	})
 }
 
-export const apiGetDailyGuestReport = async (data) => {
-	return await apolloProvider.defaultClient.query({
-		query: gql`query listDailyGuestReport($filter: ListDailyGuestReportInput!) {
-        listDailyGuestReport(filter: $filter) {
-            items {
-                date
-                guestCount
-            }
-        }
-    }`,
-		variables: data,
+export const apiGetDailyGuestReport = async (query) => {
+	return httpRequest({
+		url: '/report/daily-guest?' + query ,
+		method: 'GET',
 	})
 }

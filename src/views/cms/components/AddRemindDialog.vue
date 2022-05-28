@@ -31,8 +31,8 @@
         <el-form-item label="狀態:" prop="status">
           <el-switch
               v-model="formData.status"
-              :active-value="'Enabled'"
-              :inactive-value="'Disabled'"
+              :active-value="1"
+              :inactive-value="2"
           />
         </el-form-item>
       </el-form>
@@ -59,12 +59,12 @@ export default {
       initialFormData: {
         title: '',
         content: '',
-        status: 'Enabled'
+        status: 1
       },
       formData: {
         title: '',
         content: '',
-        status: 'Enabled'
+        status: 1
       },
       rules: {
         title: [{ required: true, message: '必填', trigger: 'blur' }],
@@ -85,7 +85,7 @@ export default {
         if (valid) {
           this.$refs.dialog.toggleLoadingFullScreen()
           try {
-            await apiCreateRemind({input: this.formData})
+            await apiCreateRemind(this.formData)
             this.$showSuccessMessage("操作成功", this.afterSubmit)
           } catch (error) {
             this.$refs.dialog.toggleLoadingFullScreen()

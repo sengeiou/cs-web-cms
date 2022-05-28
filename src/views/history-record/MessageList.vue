@@ -2,13 +2,13 @@
   <div class="app-container" v-loading="loading">
     <AppPanel title="訊息列表">
       <template v-slot:filter>
-        <el-input v-model="form.filter.roomID" placeholder="房間編號" style="width: 100px;" />
-        <el-select style="width: 150px;" v-model="form.filter.staffID" placeholder="職員">
+        <el-input v-model="form.room_id" placeholder="房間編號" style="width: 100px;" />
+        <el-select style="width: 150px;" v-model="form.staff_id" placeholder="職員">
           <el-option label="全部" :value="0"></el-option>
           <el-option v-for="(staff,idx) in staffs" :key="idx" :label="staff.name" :value="staff.id"></el-option>
         </el-select>
-        <el-input v-model="form.filter.content" placeholder="訊息內容" style="margin-right: 10px;width: 250px;" />
-        <el-button icon="el-icon-search" type="primary" @click="fetchData">搜尋</el-button>
+        <el-input v-model="form.content" placeholder="訊息內容" style="margin-right: 10px;width: 250px;" />
+        <el-button icon="el-icon-search" type="primary" @click="fetchData(pagination)">搜尋</el-button>
         <el-button icon="el-icon-circle-close" @click="handleClear">清除</el-button>
       </template>
       <template v-slot:body>
@@ -17,7 +17,7 @@
             :table-columns="tableColumns"
         />
         <AppPagination
-            :data="form.pagination"
+            :data="pagination"
             @change="handleChange"
         />
       </template>
@@ -43,57 +43,55 @@ export default {
   },
   created() {
     this.fetchStaffList()
-    this.fetchData()
+    this.fetchData(this.pagination)
   },
   data() {
     return {
       loading: false,
       staffs: [],
       initFilter: {
-        roomID: '',
-        staffID: 0,
+        room_id: '',
+        staff_id: 0,
         content: '',
       },
       form: {
-        filter: {
-          roomID: '',
-          staffID: 0,
-          content: '',
-        },
-        pagination: {
-          page: 1,
-          pageSize: 10,
-        }
+        room_id: '',
+        staff_id: 0,
+        content: '',
+      },
+      pagination: {
+        page: 1,
+        page_size: 10,
+        total: 0,
       },
       tableData: [],
       tableColumns: [
-        { prop: 'roomID', label: '房間編號', width: 120 },
+        { prop: 'room_id', label: '房間編號', width: 120 },
         {
-          prop: 'messageType',
+          prop: 'type',
           label: '發送方式',
           width: 140,
           render: (h, param) => {
-            const { messageType } = param.row
-            switch (messageType) {
-              case 'Staff':
-                return <span>客服 -> 會員</span>
-              case 'Member':
-                return <span>會員 -> 客服</span>
-              case 'System':
+            switch (param.row.type) {
+              case 1:
                 return <span>系統發送</span>
+              case 2:
+                return <span>會員 -> 客服</span>
+              case 3:
+                return <span>客服 -> 會員</span>
             }
           }
         },
-        { prop: 'senderName', label: '發送人', width: 140 },
+        { prop: 'sender_name', label: '發送人', width: 140 },
         {
-          prop: 'contentType',
+          prop: 'content_type',
           label: '消息類型',
           width: 120,
           render: (h, scope) => {
-            switch (scope.row.contentType) {
-              case 'Text':
+            switch (scope.row.content_type) {
+              case 2:
                 return <span>文字</span>
-              case 'Image':
+              case 3:
                 return <span>圖片</span>
               default:
                 return <span>通知</span>
@@ -116,17 +114,17 @@ export default {
     getTime(timestamp) {
       return moment(timestamp*1000).format('YYYY-MM-DD HH:mm:ss');
     },
-    async fetchData() {
+    async fetchData(payload) {
       try {
         this.loading = true
         let params = deepCopy(this.form)
-        if(params.filter.roomID === '') {
-          params.filter.roomID = 0
+        if(params.room_id === '') {
+          params.room_id = 0
         }
-        delete params.pagination.total;
-        const { data } = await apiGetMessageList(params)
-        this.tableData = data.listMessage.messages
-        this.form.pagination = data.listMessage.pagination
+        const query = new URLSearchParams({...params, ...(payload)});
+        const { data, pagination } = await apiGetMessageList(query.toString())
+        this.tableData = data
+        this.pagination = pagination
         this.loading = false
       } catch (err) {
         console.log(err)
@@ -136,30 +134,26 @@ export default {
     async fetchStaffList() {
       try {
         this.loading = true
-        const { data } = await apiGetStaffList({
-          filter: {
-            name: "",
-            status: "All",
-            servingStatus: "All",
-          },
-          pagination: {
-            page: 1,
-            pageSize: 100
-          }
-        })
-        this.staffs = data.listStaff.staffs
-        this.loading = false
+        const params = new URLSearchParams({
+          name: "",
+          status: 0,
+          serving_status: 0,
+          page: 1,
+          page_size: 100,
+        });
+        const { data } = await apiGetStaffList(params.toString())
+        this.staffs = data
       } catch (err) {
         console.log(err)
+      } finally {
         this.loading = false
       }
     },
     handleChange(payload) {
-      this.form.pagination = { ...payload }
-      this.fetchData()
+      this.fetchData(payload)
     },
     handleClear() {
-      this.form.filter = { ...this.initFilter }
+      this.form = { ...this.initFilter }
     },
   },
 }

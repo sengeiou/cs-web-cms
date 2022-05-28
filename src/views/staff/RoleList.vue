@@ -3,7 +3,7 @@
     <AppPanel title="角色列表">
       <template v-slot:filter>
         <el-input v-model="form.name" placeholder="名稱" style="width: 200px;" />
-        <el-button icon="el-icon-search" type="primary" @click="fetchData">搜尋</el-button>
+        <el-button icon="el-icon-search" type="primary" @click="fetchData(pagination)">搜尋</el-button>
         <el-button icon="el-icon-circle-close" @click="handleClear">清除</el-button>
       </template>
       <template v-slot:action>

@@ -2,18 +2,18 @@
   <div class="app-container" v-loading="loading">
     <AppPanel title="房間列表">
       <template v-slot:filter>
-        <el-input v-model="form.filter.roomID" placeholder="房間編號" style="width: 100px;" />
-        <el-select style="width: 150px;" v-model="form.filter.staffID" placeholder="職員">
+        <el-input v-model="form.room_id" placeholder="房間編號" style="width: 100px;" />
+        <el-select style="width: 150px;" v-model="form.staff_id" placeholder="職員">
           <el-option label="全部" :value="0"></el-option>
           <el-option v-for="(staff,idx) in staffs" :key="idx" :label="staff.name" :value="staff.id"></el-option>
         </el-select>
-        <el-select style="width: 100px;" v-model="form.filter.status" placeholder="狀態">
-          <el-option label="全部" value="All"></el-option>
-          <el-option label="等待中" value="Pending"></el-option>
-          <el-option label="服務中" value="Serving"></el-option>
-          <el-option label="已關閉" value="Closed"></el-option>
+        <el-select style="width: 100px;" v-model="form.status" placeholder="狀態">
+          <el-option label="全部" :value="0"></el-option>
+          <el-option label="等待中" :value="1"></el-option>
+          <el-option label="服務中" :value="2"></el-option>
+          <el-option label="已關閉" :value="3"></el-option>
         </el-select>
-        <el-button icon="el-icon-search" type="primary" @click="fetchData">搜尋</el-button>
+        <el-button icon="el-icon-search" type="primary" @click="fetchData(pagination)">搜尋</el-button>
         <el-button icon="el-icon-circle-close" @click="handleClear">清除</el-button>
       </template>
       <template v-slot:body>
@@ -21,7 +21,7 @@
             :table-data="tableData"
             :table-columns="tableColumns"
         />
-        <AppPagination :data="form.pagination" @change="handleChange" />
+        <AppPagination :data="pagination" @change="handleChange" />
       </template>
     </AppPanel>
   </div>
@@ -44,66 +44,64 @@ export default {
   },
   created() {
     this.fetchStaffList()
-    this.fetchData()
+    this.fetchData(this.pagination)
   },
   data() {
     return {
       loading: false,
       staffs: [],
       initFilter: {
-        roomID: '',
-        staffID: 0,
-        status: 'All',
+        room_id: '',
+        staff_id: 0,
+        status: 0,
       },
       form: {
-        filter: {
-          roomID: '',
-          staffID: 0,
-          status: 'All',
-        },
-        pagination: {
-          page: 1,
-          pageSize: 10,
-          total: 0,
-        }
+        room_id: '',
+        staff_id: 0,
+        status: 0,
+      },
+      pagination: {
+        page: 1,
+        page_size: 10,
+        total: 0,
       },
       tableData: [],
       tableColumns: [
         { prop: 'id', label: '編號' },
-        { prop: 'memberName', label: '會員名稱' },
-        { prop: 'staffName', label: '職員名稱' },
-        { prop: 'tagName', label: '標籤' },
+        { prop: 'member_name', label: '會員名稱' },
+        { prop: 'staff_name', label: '職員名稱' },
+        { prop: 'tag_name', label: '標籤' },
         {
           prop: 'status',
           label: '狀態',
           render: (h, scope) => {
             switch (scope.row.status) {
-              case 'Pending':
+              case 1:
                 return <el-tag effect="dark" type="warning">等待中</el-tag>
-              case 'Serving':
+              case 2:
                 return <el-tag effect="dark" type="success">服務中</el-tag>
-              case 'Closed':
+              case 3:
                 return <el-tag effect="dark" type="danger">已關閉</el-tag>
             }
           }
         },
-        { prop: 'startTime', label: '開始時間', width: 180 },
-        { prop: 'endTime', label: '結束時間', width: 180 },
+        { prop: 'created_at', label: '開始時間', width: 180 },
+        { prop: 'closed_at', label: '結束時間', width: 180 },
       ]
     }
   },
   methods: {
-    async fetchData() {
+    async fetchData(payload) {
       try {
         this.loading = true
         let params = deepCopy(this.form)
-        if(params.filter.roomID === '') {
-          params.filter.roomID = 0
+        if(params.room_id === '') {
+          params.room_id = 0
         }
-        delete params.pagination.total
-        const { data } = await apiGetRoomList(params)
-        this.tableData = data.listRoom.rooms
-        this.form.pagination = data.listRoom.pagination
+        const query = new URLSearchParams({...params, ...(payload)});
+        const { data, pagination } = await apiGetRoomList(query.toString())
+        this.tableData = data
+        this.pagination = pagination
         this.loading = false
       } catch (err) {
         console.log(err)
@@ -113,18 +111,15 @@ export default {
     async fetchStaffList() {
       try {
         this.loading = true
-        const { data } = await apiGetStaffList({
-          filter: {
-            name: "",
-            status: "All",
-            servingStatus: "All",
-          },
-          pagination: {
-            page: 1,
-            pageSize: 100
-          }
-        })
-        this.staffs = data.listStaff.staffs
+        const params = new URLSearchParams({
+          name: "",
+          status: 0,
+          serving_status: 0,
+          page: 1,
+          page_size: 100,
+        });
+        const { data } = await apiGetStaffList(params.toString())
+        this.staffs = data
       } catch (err) {
         console.log(err)
       } finally {
@@ -132,11 +127,10 @@ export default {
       }
     },
     handleChange(payload) {
-      this.form.pagination = { ...payload }
-      this.fetchData()
+      this.fetchData(payload)
     },
     handleClear() {
-      this.form.filter = { ...this.initFilter }
+      this.form = { ...this.initFilter }
     },
   },
 }

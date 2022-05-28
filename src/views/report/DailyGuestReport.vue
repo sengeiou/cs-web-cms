@@ -56,13 +56,16 @@ export default {
     async fetchData() {
       try {
         this.loading = true
-        const { data } = await apiGetDailyGuestReport({
-          filter: {
-            startDate: this.dateRange[0],
-            endDate: this.dateRange[1]
-          }
-        })
-        this.tableData = data.listDailyGuestReport.items
+        const params = new URLSearchParams({
+          start_date: this.dateRange[0],
+          end_date: this.dateRange[1],
+        });
+        const { data } = await apiGetDailyGuestReport(params.toString())
+        this.tableData = []
+        let keys = Object.keys(data)
+        for(let i = 0; i < keys.length; i++){
+          this.tableData.push({date: keys[i], guestCount:data[keys[i]]})
+        }
         this.loading = false
       } catch (err) {
         console.log(err)

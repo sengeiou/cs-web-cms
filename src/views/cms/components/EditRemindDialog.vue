@@ -31,8 +31,8 @@
         <el-form-item label="狀態:" prop="status">
           <el-switch
               v-model="formData.status"
-              :active-value="'Enabled'"
-              :inactive-value="'Disabled'"
+              :active-value="1"
+              :inactive-value="2"
           />
         </el-form-item>
       </el-form>
@@ -57,11 +57,11 @@ export default {
   },
   data() {
     return {
+      remindId: 0,
       formData: {
-        id: 0,
         title: '',
         content: '',
-        status: 'Enabled'
+        status: 1
       },
       rules: {
         title: [{ required: true, message: '必填', trigger: 'blur' }],
@@ -71,16 +71,17 @@ export default {
   },
   methods: {
     show(id) {
-      this.formData.id = id
+      this.remindId = id
       this.fetchData()
       this.$refs.dialog.show()
     },
     async fetchData() {
       try {
         this.$refs.dialog.toggleLoadingDialog()
-        const { id } = this.formData
-        const { data } = await apiGetRemindDetail({ input: id })
-        this.formData = { ...this.formData, ...data.getRemind.remind }
+        const { data } = await apiGetRemindDetail(this.remindId)
+        this.formData.title = data.title
+        this.formData.content = data.content
+        this.formData.status = data.status
       } catch (err) {
         console.log(err)
       } finally {
@@ -95,7 +96,7 @@ export default {
         if (valid) {
           this.$refs.dialog.toggleLoadingFullScreen()
           try {
-            await apiUpdateRemind({input: this.formData})
+            await apiUpdateRemind(this.remindId, this.formData)
             this.$showSuccessMessage("操作成功", this.afterSubmit)
           } catch (error) {
             this.$refs.dialog.toggleLoadingFullScreen()

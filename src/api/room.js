@@ -1,5 +1,6 @@
 import apolloProvider from "@/utils/gql";
 import {gql} from "apollo-boost";
+import httpRequest from "@/utils/http";
 
 export const apiGetStaffRoomList = async (data) => {
 	return await apolloProvider.defaultClient.query({
@@ -21,27 +22,10 @@ export const apiGetStaffRoomList = async (data) => {
 	})
 }
 
-export const apiGetRoomList = async (data) => {
-	return await apolloProvider.defaultClient.query({
-		query: gql`query listRoom($filter: ListRoomInput!, $pagination: PaginationInput!) {
-        listRoom(filter: $filter, pagination: $pagination) {
-            rooms {
-                id
-                staffName
-                memberName
-                tagName
-                startTime
-                endTime
-                status
-            }
-            pagination {
-                page
-                pageSize
-                total
-            }
-        }
-    }`,
-		variables: data,
+export const apiGetRoomList = async (query) => {
+	return httpRequest({
+		url: '/rooms?' + query,
+		method: 'GET',
 	})
 }
 

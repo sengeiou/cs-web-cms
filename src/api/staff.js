@@ -1,5 +1,3 @@
-import apolloProvider from "@/utils/gql";
-import {gql} from "apollo-boost";
 import httpRequest from "@/utils/http";
 
 export const apiGetStaffList = async (query) => {

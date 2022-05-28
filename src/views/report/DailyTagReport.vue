@@ -46,31 +46,28 @@ export default {
       dateRange: [before, now],
       loading: false,
       tableData: [],
-      tableColumns: [
-        { prop: 'date', label: '日期' },
-      ]
+      tableColumns: [],
     }
   },
   methods: {
     async fetchData() {
       try {
         this.loading = true
-        const { data } = await apiGetDailyTagReport({
-          filter: {
-            startDate: this.dateRange[0],
-            endDate: this.dateRange[1]
-          }
-        })
-        let columns = data.listDailyTagReport.columns
-        let items = data.listDailyTagReport.items
+        const params = new URLSearchParams({
+          start_date: this.dateRange[0],
+          end_date: this.dateRange[1],
+        });
+        const { data } = await apiGetDailyTagReport(params.toString())
+        let columns = data.columns
+        let items = data.items
         this.tableColumns = [{ prop: 'date', label: '日期' }]
         for(let i = 0; i < columns.length; i++){
           this.tableColumns.push({ prop: columns[i].key, label: columns[i].label })
         }
         this.tableData = []
-        for(let i = 0; i < items.length; i++){
-          let tmp = JSON.parse(items[i].jsonData)
-          this.tableData.push({date: items[i].date, ...tmp})
+        let keys = Object.keys(items)
+        for(let i = 0; i < keys.length; i++){
+          this.tableData.push({date: keys[i], ...items[keys[i]]})
         }
         this.loading = false
       } catch (err) {
