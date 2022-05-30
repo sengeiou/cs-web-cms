@@ -1,21 +1,21 @@
 const permissionKeys = {
 	"CsSystem": "客服系統",
 	"CsSetting": "客服設置",
-	"CsSetting.TagList": "標籤列表",
-	"CsSetting.FastReplyList": "快捷訊息列表",
-	"CsSetting.NoticeList": "通知列表",
-	"CsSetting.ConfigSetting": "參數配置",
+	"ListTag": "標籤列表",
+	"ListFastReply": "快捷訊息列表",
+	"ListNotice": "通知列表",
+	"GetCsConfig": "參數配置",
 	"HistoryRecord": "歷史紀錄",
-	"HistoryRecord.RoomList": "諮詢房列表",
-	"HistoryRecord.MessageList": "訊息列表",
+	"ListRoom": "諮詢房列表",
+	"ListMessage": "訊息列表",
 	"Report": "報表管理",
-	"Report.DailyTagReport": "諮詢類型報表",
-	"Report.DailyGuestReport": "訪客數報表",
+	"DailyTagReport": "諮詢類型報表",
+	"DailyGuestReport": "訪客數報表",
 	"CMS": "後台管理",
-	"CMS.RemindList": "提醒列表",
+	"ListRemind": "提醒列表",
 	"Staff": "職員管理",
-	"Staff.StaffList": "職員列表",
-	"Staff.RoleList": "角色列表",
+	"ListStaff": "職員列表",
+	"ListRole": "角色列表",
 }
 
 export const getPermissionKeys = () => {
@@ -32,19 +32,19 @@ export const permissionTree = [
 		label: "客服設置",
 		children: [
 			{
-				id: "CsSetting.TagList",
+				id: "ListTag",
 				label: "標籤列表",
 			},
 			{
-				id: "CsSetting.FastReplyList",
+				id: "ListFastReply",
 				label: "快捷訊息列表",
 			},
 			{
-				id: "CsSetting.NoticeList",
+				id: "ListNotice",
 				label: "通知列表",
 			},
 			{
-				id: "CsSetting.ConfigSetting",
+				id: "GetCsConfig",
 				label: "參數配置",
 			},
 		],
@@ -54,11 +54,11 @@ export const permissionTree = [
 		label: "歷史紀錄",
 		children: [
 			{
-				id: "HistoryRecord.RoomList",
+				id: "ListRoom",
 				label: "諮詢房列表",
 			},
 			{
-				id: "HistoryRecord.MessageList",
+				id: "ListMessage",
 				label: "訊息列表",
 			},
 		]
@@ -68,12 +68,22 @@ export const permissionTree = [
 		label: "報表管理",
 		children: [
 			{
-				id: "Report.DailyTagReport",
+				id: "DailyTagReport",
 				label: "諮詢類型報表",
 			},
 			{
-				id: "Report.DailyGuestReport",
+				id: "DailyGuestReport",
 				label: "訪客數報表",
+			},
+		]
+	},
+	{
+		id: "CMS",
+		label: "後台管理",
+		children: [
+			{
+				id: "ListRemind",
+				label: "提醒列表",
 			},
 		]
 	},
@@ -82,11 +92,11 @@ export const permissionTree = [
 		label: "報表管理",
 		children: [
 			{
-				id: "Staff.StaffList",
+				id: "ListStaff",
 				label: "職員列表",
 			},
 			{
-				id: "Staff.RoleList",
+				id: "ListRole",
 				label: "角色列表",
 			},
 		]

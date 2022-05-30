@@ -1,5 +1,5 @@
 import {apiAuthLogin, apiAuthLogout, apiGetStaffInfo} from '@/api/auth'
-import { setToken, removeToken } from '@/utils/storage'
+import {setToken, removeToken, setPermission, removePermission} from '@/utils/storage'
 import { resetRouter } from '@/router'
 import { deepCopy } from '@/utils'
 
@@ -45,6 +45,7 @@ const actions = {
         .then((response) => {
           commit('RESET_STATE')
           setToken(response.data.token)
+          setPermission(response.data.permissions)
           resolve()
         })
         .catch((error) => {
@@ -59,6 +60,7 @@ const actions = {
         .then((response) => {
           localStorage.clear()
           removeToken()
+          removePermission()
           resetRouter()
           commit('RESET_STATE')
           commit('permission/RESET_STATE', null, { root: true })
@@ -73,6 +75,7 @@ const actions = {
   resetToken({ commit }) {
     localStorage.clear()
     removeToken()
+    removePermission()
     resetRouter()
     commit('RESET_STATE')
     commit('permission/RESET_STATE', null, { root: true })

@@ -86,25 +86,25 @@ export const asyncRoutes = [
         path: '/cs-setting/tag-list',
         name: 'TagList',
         component: () => import('@/views/cs-setting/tag/TagList'),
-        meta: { title: '標籤列表', icon: 'tag', key: 'CsSetting.TagList' }
+        meta: { title: '標籤列表', icon: 'tag', key: 'ListTag' }
       },
       {
         path: '/cs-setting/fast-reply-list',
         name: 'FastReplyList',
         component: () => import('@/views/cs-setting/fast-reply/FastReplyList'),
-        meta: { title: '快捷回覆列表', icon: 'send', key: 'CsSetting.FastReplyList' }
+        meta: { title: '快捷回覆列表', icon: 'send', key: 'ListFastReply' }
       },
       {
         path: '/cs-setting/notice-list',
         name: 'NoticeList',
         component: () => import('@/views/cs-setting/notice/NoticeList'),
-        meta: { title: '通知列表', icon: 'notice', key: 'CsSetting.NoticeList' }
+        meta: { title: '通知列表', icon: 'notice', key: 'ListNotice' }
       },
       {
         path: '/cs-setting/config-setting',
         name: 'ConfigSetting',
         component: () => import('@/views/cs-setting/config/ConfigSetting'),
-        meta: { title: '參數配置', icon: 'setting', key: 'CsSetting.ConfigSetting' }
+        meta: { title: '參數配置', icon: 'setting', key: 'GetCsConfig' }
       },
     ]
   },
@@ -118,13 +118,13 @@ export const asyncRoutes = [
         path: '/history-record/room-list',
         name: 'RoomList',
         component: () => import('@/views/history-record/RoomList'),
-        meta: { title: '諮詢房列表', icon: 'phone', key: 'HistoryRecord.RoomList' }
+        meta: { title: '諮詢房列表', icon: 'phone', key: 'ListRoom' }
       },
       {
         path: '/history-record/message-list',
         name: 'MessageList',
         component: () => import('@/views/history-record/MessageList'),
-        meta: { title: '訊息列表', icon: 'message', key: 'HistoryRecord.MessageList' }
+        meta: { title: '訊息列表', icon: 'message', key: 'ListMessage' }
       },
     ]
   },
@@ -138,13 +138,13 @@ export const asyncRoutes = [
         path: '/report-management/daily-tag-report',
         name: 'DailyTagReport',
         component: () => import('@/views/report/DailyTagReport'),
-        meta: { title: '諮詢類型報表', icon: 'file', key: 'Report.DailyTagReport' }
+        meta: { title: '諮詢類型報表', icon: 'file', key: 'DailyTagReport' }
       },
       {
         path: '/report-management/daily-guest-report',
         name: 'DailyGuestReport',
         component: () => import('@/views/report/DailyGuestReport'),
-        meta: { title: '訪客數報表', icon: 'file', key: 'Report.DailyGuestReport' }
+        meta: { title: '訪客數報表', icon: 'file', key: 'DailyGuestReport' }
       },
     ]
   },
@@ -158,7 +158,7 @@ export const asyncRoutes = [
         path: '/cms-management/remind-list',
         name: 'RemindList',
         component: () => import('@/views/cms/RemindList'),
-        meta: { title: '提醒列表', icon: 'remind', key: 'CMS.RemindList' }
+        meta: { title: '提醒列表', icon: 'remind', key: 'ListRemind' }
       },
     ]
   },
@@ -172,13 +172,13 @@ export const asyncRoutes = [
         path: '/staff-management/staff-list',
         name: 'StaffList',
         component: () => import('@/views/staff/StaffList'),
-        meta: { title: '職員列表', icon: 'user', key: 'Staff.StaffList' },
+        meta: { title: '職員列表', icon: 'user', key: 'ListStaff' },
       },
       {
         path: '/staff-management/role-list',
         name: 'RoleList',
         component: () => import('@/views/staff/RoleList'),
-        meta: { title: '角色列表', icon: 'identity', key: 'Staff.RoleList' },
+        meta: { title: '角色列表', icon: 'identity', key: 'ListRole' },
       },
     ]
   },

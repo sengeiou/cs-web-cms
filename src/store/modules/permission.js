@@ -1,6 +1,7 @@
 import { constantRoutes, asyncRoutes } from '@/router'
 import {getPermissionKeys, permissionKeys} from "@/utils/authorities";
 import {apiGetStaffInfo} from "@/api/auth";
+import {getPermission} from "@/utils/storage";
 
 const state = {
   routes: [],
@@ -45,19 +46,13 @@ const resolveChildren = function(result, item, keys) {
 const actions = {
   getRouteKeys({ commit }) {
     return new Promise(async (resolve, reject) => {
-      apiGetStaffInfo()
-        .then((response) => {
-          let staff = response.data
-          if (staff.role_id === 1) {
-            commit('SET_ROUTE_KEYS', getPermissionKeys())
-          } else {
-            commit('SET_ROUTE_KEYS', response.data.permissions)
-          }
-          resolve()
-        })
-        .catch((error) => {
-          reject(error)
-        })
+      let perms = getPermission().split(",")
+      if (perms.includes("*")) {
+        commit('SET_ROUTE_KEYS', getPermissionKeys())
+      } else {
+        commit('SET_ROUTE_KEYS', perms)
+      }
+      resolve()
     })
   },
   generateRoutes({ commit, state }) {

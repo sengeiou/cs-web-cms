@@ -32,7 +32,6 @@
               type="datetime"
               placeholder="請選擇時間"
               size="small"
-              value-format="yyyy-MM-dd HH:mm:ss"
           />
         </el-form-item>
         <el-form-item label="結束時間:" prop="end_at">
@@ -41,7 +40,6 @@
               type="datetime"
               placeholder="請選擇時間"
               size="small"
-              value-format="yyyy-MM-dd HH:mm:ss"
           />
         </el-form-item>
         <el-form-item label="狀態:" prop="status">
@@ -63,6 +61,7 @@
 <script>
 import AppDialog from '@/components/AppDialog'
 import {apiGetNoticeDetail, apiUpdateNotice} from "@/api/notice";
+import moment from "moment";
 
 export default {
   name: 'EditNoticeDialog',
@@ -101,8 +100,8 @@ export default {
         const { data } = await apiGetNoticeDetail(this.id)
         this.formData.title = data.title
         this.formData.content = data.content
-        this.formData.start_at = data.start_at
-        this.formData.end_at = data.end_at
+        this.formData.start_at = new Date(data.start_at)
+        this.formData.end_at = new Date(data.end_at)
         this.formData.status = data.status
         this.$refs.dialog.toggleLoadingDialog()
       } catch (err) {
@@ -118,6 +117,8 @@ export default {
         if (valid) {
           this.$refs.dialog.toggleLoadingFullScreen()
           try {
+            this.formData.start_at = moment(this.formData.start_at).format('yyyy-MM-DD HH:mm:ss');
+            this.formData.end_at = moment(this.formData.end_at).format('yyyy-MM-DD HH:mm:ss');
             await apiUpdateNotice(this.id, this.formData)
             this.$showSuccessMessage("操作成功", this.afterSubmit)
           } catch (error) {
