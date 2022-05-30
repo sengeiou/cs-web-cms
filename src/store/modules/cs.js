@@ -35,7 +35,7 @@ const mutations = {
 		state.newMessage = true
 		// handle member join
 		if(message.content_type === 5) {
-			const result = state.roomList.filter(item => item.id === message.roomID);
+			const result = state.roomList.filter(item => item.id === message.room_id);
 			if(result.length === 0) {
 				state.roomList.push({
 					id: message.room_id,
