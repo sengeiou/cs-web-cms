@@ -34,12 +34,12 @@ const mutations = {
 	APPEND_MESSAGE(state, message) {
 		state.newMessage = true
 		// handle member join
-		if(message.contentType === 'Join') {
+		if(message.content_type === 5) {
 			const result = state.roomList.filter(item => item.id === message.roomID);
 			if(result.length === 0) {
 				state.roomList.push({
-					id: message.roomID,
-					memberName: message.extraInfo.clientName,
+					id: message.room_id,
+					memberName: message.extra_info.client_name,
 					status: "Serving",
 					message: "- 無內容 -",
 					isRead: false,
@@ -48,14 +48,14 @@ const mutations = {
 		} else {
 			let i
 			for (i = 0; i < state.roomList.length; i++) {
-				if (state.roomList[i].id === message.roomID) {
-					if(message.messageType ===  "Member") {
+				if (state.roomList[i].id === message.room_id) {
+					if(message.type ===  2) {
 						state.roomList[i].message = message.content
 					}
 					break
 				}
 			}
-			if(message.roomID === state.activeRoomId) {
+			if(message.room_id === state.activeRoomId) {
 				state.roomList[i].isRead = true
 				state.messageList.push(message)
 			} else {
@@ -84,7 +84,7 @@ const actions = {
 		return new Promise((resolve, reject) => {
 			apiGetStaffRoomList(payload)
 				.then((response) => {
-					commit('SET_ROOMS', response.data.listStaffRoom.rooms)
+					commit('SET_ROOMS', response.data)
 					resolve()
 				})
 				.catch((error) => {
@@ -96,7 +96,7 @@ const actions = {
 		return new Promise((resolve, reject) => {
 			apiGetRoomMessageList(payload)
 				.then((response) => {
-					commit('SET_MESSAGE_LIST', response.data.listRoomMessage.messages)
+					commit('SET_MESSAGE_LIST', response.data)
 					resolve()
 				})
 				.catch((error) => {

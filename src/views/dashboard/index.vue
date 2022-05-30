@@ -86,17 +86,14 @@ export default {
     async fetchRemind() {
       try {
         this.loading = true
-        const { data } = await apiGetRemindList({
-          filter: {
-            content: '',
-            status: 'Enabled',
-          },
-          pagination: {
-            page: 1,
-            pageSize: 10,
-          }
-        })
-        this.remindData = data.listRemind.reminds
+        const params = new URLSearchParams({
+          content: '',
+          status: 1,
+          page: 1,
+          page_size: 100
+        });
+        const { data } = await apiGetRemindList(params.toString())
+        this.remindData = data
         this.loading = false
       } catch (err) {
         console.log(err)

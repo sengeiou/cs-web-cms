@@ -74,11 +74,8 @@ export default {
         if (valid) {
           this.$refs.dialog.toggleLoadingFullScreen()
           try {
-            await apiTransferRoom({
-              input: {
-                id: this.activeRoomId,
-                staffID: this.formData.staffId
-              }
+            await apiTransferRoom(this.activeRoomId, {
+              staff_id: this.formData.staffId,
             })
             this.$store.commit("cs/RESET")
             await this.fetchRoomList()
@@ -104,15 +101,12 @@ export default {
       }
     },
     async fetchRoomList() {
-      await this.$store.dispatch("cs/getStaffRoomList", {
-        filter: {
-          status: this.activeTab
-        },
-        pagination: {
-          page: 1,
-          pageSize: 10
-        }
-      })
+      const params = new URLSearchParams({
+        status: this.activeTab === "Serving" ? 2 : 1,
+        page: 1,
+        page_size: 10
+      });
+      await this.$store.dispatch("cs/getStaffRoomList", params.toString())
     }
   }
 }

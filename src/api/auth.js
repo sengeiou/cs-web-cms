@@ -1,5 +1,3 @@
-import apolloProvider from "@/utils/gql";
-import {gql} from "apollo-boost";
 import httpRequest from '@/utils/http'
 
 export const apiAuthLogin = async (data) => {
@@ -18,9 +16,8 @@ export const apiGetStaffInfo = async () => {
 }
 
 export const apiAuthLogout = async () => {
-	return await apolloProvider.defaultClient.mutate({
-		mutation: gql`mutation logout {
-        logout
-    }`,
+	return httpRequest({
+		url: '/auth/logout',
+		method: 'POST',
 	})
 }

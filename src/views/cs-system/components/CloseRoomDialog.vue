@@ -75,11 +75,8 @@ export default {
         if (valid) {
           this.$refs.dialog.toggleLoadingFullScreen()
           try {
-            await apiCloseRoom({
-              input: {
-                id: this.activeRoomId,
-                tagID: this.formData.tagId
-              }
+            await apiCloseRoom(this.activeRoomId, {
+              tag_id: this.formData.tagId,
             })
             this.$store.commit("cs/RESET")
             await this.fetchRoomList()
@@ -96,17 +93,14 @@ export default {
     async fetchTags() {
       try {
         this.loading = true
-        const { data } = await apiGetTagList({
-          filter: {
-            name: "",
-            status: "Enabled",
-          },
-          pagination: {
-            page: 1,
-            pageSize: 1000
-          }
-        })
-        this.tags = data.listTag.tags
+        const params = new URLSearchParams({
+          name: "",
+          status: 1,
+          page: 1,
+          page_size: 100
+        });
+        const { data } = await apiGetTagList(params.toString())
+        this.tags = data
       } catch (err) {
         console.log(err)
       } finally {
@@ -114,15 +108,12 @@ export default {
       }
     },
     async fetchRoomList() {
-      await this.$store.dispatch("cs/getStaffRoomList", {
-        filter: {
-          status: this.activeTab
-        },
-        pagination: {
-          page: 1,
-          pageSize: 10
-        }
-      })
+      const params = new URLSearchParams({
+        status: this.activeTab === "Serving" ? 2 : 1,
+        page: 1,
+        page_size: 10
+      });
+      await this.$store.dispatch("cs/getStaffRoomList", params.toString())
     }
   }
 }

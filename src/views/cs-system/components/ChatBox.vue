@@ -6,16 +6,16 @@
     <div id="chat-box-body" class="chat-box-body">
       <div v-for="(msg,idx) in messageList" :key="idx">
         <div style="margin-bottom: 16px;">
-          <SystemMessage v-if="msg.messageType === 'System'" :content="msg.content" />
+          <SystemMessage v-if="msg.type === 1" :content="msg.content" />
           <MemberMessage
-              v-else-if="msg.messageType === 'Member'"
-              :name="msg.senderName"
+              v-else-if="msg.type === 2"
+              :name="msg.sender_name"
               :content="msg.content"
               :timestamp="msg.timestamp"
           />
           <StaffMessage
               v-else
-              :name="msg.senderName"
+              :name="msg.sender_name"
               :content="msg.content"
               :timestamp="msg.timestamp"
           />
@@ -77,15 +77,12 @@ export default {
         this.$store.commit("cs/RESET")
         await this.fetchRoomList()
         this.$store.commit('cs/SET_ACTIVE_ROOM', id)
-        await this.$store.dispatch("cs/getRoomMessageList", {
-          filter: {
-            roomID: id
-          },
-          pagination: {
-            page: 1,
-            pageSize: 10
-          }
-        })
+        const params = new URLSearchParams({
+          room_id: id,
+          page: 1,
+          page_size: 10,
+        });
+        await this.$store.dispatch("cs/getRoomMessageList", params.toString())
       } catch (err) {
         console.log(err)
       } finally {
@@ -93,15 +90,12 @@ export default {
       }
     },
     async fetchRoomList() {
-      await this.$store.dispatch("cs/getStaffRoomList", {
-        filter: {
-          status: this.activeTab
-        },
-        pagination: {
-          page: 1,
-          pageSize: 10
-        }
-      })
+      const params = new URLSearchParams({
+        status: this.activeTab === "Serving" ? 2 : 1,
+        page: 1,
+        page_size: 10
+      });
+      await this.$store.dispatch("cs/getStaffRoomList", params.toString())
     }
   },
   data() {

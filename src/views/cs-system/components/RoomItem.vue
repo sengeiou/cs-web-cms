@@ -34,9 +34,10 @@ export default {
     handleClick() {
       this.$store.commit("cs/SET_MESSAGE_READ", this.id)
       this.$store.commit("cs/SET_ACTIVE_ROOM", this.id)
-      this.$store.dispatch("cs/getRoomMessageList", {
-        roomID: this.id
-      })
+      const params = new URLSearchParams({
+        room_id: this.id,
+      });
+      this.$store.dispatch("cs/getRoomMessageList", params.toString())
     }
   }
 }

@@ -74,15 +74,12 @@ export default {
       this.fetchRoomList()
     },
     async fetchRoomList() {
-      await this.$store.dispatch("cs/getStaffRoomList", {
-        filter: {
-          status: this.activeTab
-        },
-        pagination: {
-          page: 1,
-          pageSize: 6
-        }
-      })
+      const params = new URLSearchParams({
+        status: this.activeTab === "Serving" ? 2 : 1,
+        page: 1,
+        page_size: 6,
+      });
+      await this.$store.dispatch("cs/getStaffRoomList", params.toString())
     },
   }
 }

@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import {apiGetCategoryList, apiGetFastReplyGroup} from "@/api/fast-reply";
+import {apiGetFastReplyGroup} from "@/api/fast-reply";
 import {sendSocketMessage} from "@/utils/ws";
 import {mapGetters} from "vuex";
 import {deepCopy} from "@/utils";
@@ -79,8 +79,8 @@ export default {
       try {
         this.loading = true
         const { data } = await apiGetFastReplyGroup()
-        this.group = data.listFastReplyGroup.group
-        this.tmpGroup = data.listFastReplyGroup.group
+        this.group = data
+        this.tmpGroup = data
       } catch (err) {
         console.log(err)
       } finally {

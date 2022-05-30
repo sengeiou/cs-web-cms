@@ -2,7 +2,7 @@ import httpRequest from "@/utils/http";
 
 export const apiGetRoomMessageList = async (query) => {
     return httpRequest({
-        url: '/messages?' + query,
+        url: '/room-messages/staff?' + query,
         method: 'GET',
     })
 }
