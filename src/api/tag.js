@@ -36,3 +36,10 @@ export const apiDeleteTag = async (id) => {
 		method: 'DELETE',
 	})
 }
+
+export const apiGetAvailableTags = async () => {
+	return httpRequest({
+		url: '/available-tags',
+		method: 'GET',
+	})
+}

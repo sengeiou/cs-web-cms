@@ -30,7 +30,7 @@
 import AppDialog from '@/components/AppDialog'
 import { deepCopy } from '@/utils'
 import {apiCloseRoom} from "@/api/room";
-import {apiGetTagList} from "@/api/tag";
+import {apiGetAvailableTags} from "@/api/tag";
 import {mapGetters} from "vuex";
 
 export default {
@@ -93,13 +93,7 @@ export default {
     async fetchTags() {
       try {
         this.loading = true
-        const params = new URLSearchParams({
-          name: "",
-          status: 1,
-          page: 1,
-          page_size: 100
-        });
-        const { data } = await apiGetTagList(params.toString())
+        const { data } = await apiGetAvailableTags()
         this.tags = data
       } catch (err) {
         console.log(err)

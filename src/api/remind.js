@@ -36,3 +36,10 @@ export const apiDeleteRemind = async (id) => {
 		method: 'DELETE',
 	})
 }
+
+export const apiGetActiveReminds = async () => {
+	return httpRequest({
+		url: '/active-reminds',
+		method: 'GET',
+	})
+}

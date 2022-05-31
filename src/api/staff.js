@@ -59,3 +59,10 @@ export const apiGetAvailableStaff = async () => {
     method: 'GET',
   })
 }
+
+export const apiGetAllStaff = async () => {
+  return httpRequest({
+    url: '/staffs/all',
+    method: 'GET',
+  })
+}

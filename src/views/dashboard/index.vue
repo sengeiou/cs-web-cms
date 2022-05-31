@@ -20,9 +20,9 @@
 
 <script>
 import PanelGroup from './components/PanelGroup'
-import {apiGetStaffList} from "@/api/staff";
+import {apiGetAllStaff} from "@/api/staff";
 import AppTable from "@/components/AppTable";
-import {apiGetRemindList} from "@/api/remind";
+import {apiGetActiveReminds} from "@/api/remind";
 
 export default {
   name: 'Dashboard',
@@ -68,14 +68,7 @@ export default {
     async fetchData() {
       try {
         this.loading = true
-        const params = new URLSearchParams({
-          name: '',
-          status: 1,
-          serving_status: 0,
-          page: 1,
-          page_size: 100
-        });
-        const { data } = await apiGetStaffList(params.toString())
+        const { data } = await apiGetAllStaff()
         this.tableData = data
         this.loading = false
       } catch (err) {
@@ -86,13 +79,7 @@ export default {
     async fetchRemind() {
       try {
         this.loading = true
-        const params = new URLSearchParams({
-          content: '',
-          status: 1,
-          page: 1,
-          page_size: 100
-        });
-        const { data } = await apiGetRemindList(params.toString())
+        const { data } = await apiGetActiveReminds()
         this.remindData = data
         this.loading = false
       } catch (err) {
