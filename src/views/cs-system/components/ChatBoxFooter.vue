@@ -3,6 +3,19 @@
     <div class="input">
       <div id="input-area" class="input-area" @compositionstart="isComposing = true; this.haveChanged = true;" @compositionend="isComposing = false" @keyup.enter.exact="onEnter">
         <textarea v-model="message.content" placeholder="請輸入訊息..." :disabled="taDisabled"></textarea>
+        <el-upload
+            class="upload-btn"
+            :action="url()"
+            :headers="{'X-Token': sid()}"
+            :show-file-list="false"
+            accept="image/jpg,image/jpeg,image/png"
+            :on-success="successCB"
+        >
+          <el-tooltip placement="top">
+            <template #content>上傳圖片</template>
+            <el-button icon="el-icon-picture" circle></el-button>
+          </el-tooltip>
+        </el-upload>
         <el-tooltip class="send-btn" content="發送" placement="top">
           <el-button type="success" icon="el-icon-s-promotion" circle @click="sendMessage"></el-button>
         </el-tooltip>
@@ -14,6 +27,7 @@
 <script>
 import { sendSocketMessage } from "@/utils/ws";
 import {mapGetters} from "vuex";
+import {getToken} from "@/utils/storage";
 
 export default {
   name: "ChatBoxFooter",
@@ -63,7 +77,20 @@ export default {
         this.haveChanged = false
         this.isOK = true
       }
-    }
+    },
+    url() {
+      return process.env.VUE_APP_HTTP_URL + "/upload/staff"
+    },
+    sid() {
+      return getToken()
+    },
+    successCB(response) {
+      sendSocketMessage({
+        room_id: this.activeRoomId,
+        content_type: 3,
+        content: response.data
+      })
+    },
   }
 }
 </script>
@@ -92,6 +119,12 @@ export default {
         &:focus {
           outline: none !important;
         }
+      }
+      .upload-btn {
+        position: absolute;
+        bottom: 14px;
+        right: 60px;
+        border: none;
       }
       .send-btn {
         position: absolute;

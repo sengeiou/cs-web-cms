@@ -49,8 +49,12 @@ const mutations = {
 			let i
 			for (i = 0; i < state.roomList.length; i++) {
 				if (state.roomList[i].id === message.room_id) {
-					if(message.type ===  2) {
-						state.roomList[i].message = message.content
+					if(message.type === 2) {
+						if (message.content_type === 3) {
+							state.roomList[i].message = "會員上傳一張圖片"
+						} else {
+							state.roomList[i].message = message.content
+						}
 					}
 					break
 				}

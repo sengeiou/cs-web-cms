@@ -10,12 +10,14 @@
           <MemberMessage
               v-else-if="msg.type === 2"
               :name="msg.sender_name"
+              :content-type="msg.content_type"
               :content="msg.content"
               :timestamp="msg.timestamp"
           />
           <StaffMessage
               v-else
               :name="msg.sender_name"
+              :content-type="msg.content_type"
               :content="msg.content"
               :timestamp="msg.timestamp"
           />

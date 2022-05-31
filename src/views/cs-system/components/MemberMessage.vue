@@ -1,12 +1,29 @@
 <template>
   <div class="member-message-container">
-    <div class="content-section">
-      <div class="content-desc">
-        <span class="member-name">{{name}}</span>
-        <span class="member-time">{{getTime(timestamp)}}</span>
+    <template v-if="contentType === 2">
+      <div class="content-section">
+        <div class="content-desc">
+          <span class="member-name">{{name}}</span>
+          <span class="member-time">{{getTime(timestamp)}}</span>
+        </div>
+        <div class="content-text">{{content}}</div>
       </div>
-      <div class="content-text">{{content}}</div>
-    </div>
+    </template>
+    <template v-if="contentType === 3">
+      <div class="content-section">
+        <div class="content-desc">
+          <span class="member-name">{{name}}</span>
+          <span class="member-time">{{getTime(timestamp)}}</span>
+        </div>
+        <div class="content-text">
+          <el-image
+              style="width: 100%;"
+              :src="content"
+              :preview-src-list="[content]">
+          </el-image>
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -17,6 +34,7 @@ export default {
   name: "MemberMessage",
   props: {
     name: String,
+    contentType: Number,
     content: String,
     timestamp: Number
   },
@@ -65,6 +83,11 @@ export default {
         top: 9px;
         border-top: 8px solid transparent;
         border-bottom: 8px solid transparent;
+      }
+      .el-image {
+        max-width: 300px;
+        margin-top: 3px;
+        border-radius: 10px;
       }
     }
   }

@@ -1,10 +1,25 @@
 <template>
   <div class="staff-message-container">
-    <div class="top-section">
-      <div class="staff-time">{{getTime(timestamp)}}</div>
-      <div class="staff-name">{{name}}</div>
-    </div>
-    <div class="content-text">{{content}}</div>
+    <template v-if="contentType === 2">
+      <div class="top-section">
+        <div class="staff-time">{{getTime(timestamp)}}</div>
+        <div class="staff-name">{{name}}</div>
+      </div>
+      <div class="content-text">{{content}}</div>
+    </template>
+    <template v-if="contentType === 3">
+      <div class="top-section">
+        <div class="staff-time">{{getTime(timestamp)}}</div>
+        <div class="staff-name">{{name}}</div>
+      </div>
+      <div class="content-text">
+        <el-image
+            style="width: 100%;"
+            :src="content"
+            :preview-src-list="[content]">
+        </el-image>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -15,6 +30,7 @@ export default {
   name: "StaffMessage",
   props: {
     name: String,
+    contentType: Number,
     content: String,
     timestamp: Number,
   },
@@ -68,6 +84,11 @@ export default {
       top: 9px;
       border-top: 8px solid transparent;
       border-bottom: 8px solid transparent;
+    }
+    .el-image {
+      max-width: 300px;
+      margin-top: 3px;
+      border-radius: 10px;
     }
   }
 }
