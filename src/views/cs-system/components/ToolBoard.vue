@@ -92,9 +92,10 @@ export default {
       message = message.replace(/\r\n|\n/g,"");
       if(message !== "" && this.activeRoomId !== "") {
         sendSocketMessage({
+          op_type: 2,
           room_id: this.activeRoomId,
-          content_type: 2,
-          content: message
+          content_type: 1,
+          content: message,
         })
       }
     },

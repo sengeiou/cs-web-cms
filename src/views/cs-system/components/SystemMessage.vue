@@ -1,6 +1,8 @@
 <template>
 <div class="system-message-container">
-  <div class="system-message">{{content}}</div>
+  <div v-if="opType === 3" class="system-message">已發送評分請求</div>
+  <div v-else-if="opType === 4" class="system-message">已完成評分</div>
+  <div v-else class="system-message">{{content}}</div>
 </div>
 </template>
 
@@ -8,6 +10,7 @@
 export default {
   name: "SystemMessage",
   props: {
+    opType: Number,
     content: String
   }
 }

@@ -1,13 +1,13 @@
 <template>
   <div class="staff-message-container">
-    <template v-if="contentType === 2">
+    <template v-if="contentType === 1">
       <div class="top-section">
         <div class="staff-time">{{getTime(timestamp)}}</div>
         <div class="staff-name">{{name}}</div>
       </div>
       <div class="content-text">{{content}}</div>
     </template>
-    <template v-if="contentType === 3">
+    <template v-if="contentType === 2">
       <div class="top-section">
         <div class="staff-time">{{getTime(timestamp)}}</div>
         <div class="staff-name">{{name}}</div>

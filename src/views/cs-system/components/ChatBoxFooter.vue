@@ -53,8 +53,9 @@ export default {
       isOK: true,
       haveChanged: false,
       message: {
+        op_type: 2,
         room_id: this.activeRoomId,
-        content_type: 2,
+        content_type: 1,
         content: ""
       }
     }
@@ -86,8 +87,9 @@ export default {
     },
     successCB(response) {
       sendSocketMessage({
+        op_type: 2,
         room_id: this.activeRoomId,
-        content_type: 3,
+        content_type: 2,
         content: response.data
       })
     },

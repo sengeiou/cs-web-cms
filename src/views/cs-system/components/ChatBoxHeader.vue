@@ -48,8 +48,9 @@ export default {
     },
     sendScore() {
       sendSocketMessage({
+        op_type: 3,
         room_id: this.activeRoomId,
-        content_type: 4,
+        content_type: 1,
         content: ""
       })
     },

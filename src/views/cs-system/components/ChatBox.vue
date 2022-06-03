@@ -6,19 +6,19 @@
     <div id="chat-box-body" class="chat-box-body">
       <div v-for="(msg,idx) in messageList" :key="idx">
         <div style="margin-bottom: 16px;">
-          <SystemMessage v-if="msg.type === 1" :content="msg.content" />
+          <SystemMessage v-if="msg.payload.sender_type === 1" :op-type="msg.op_type" :content="msg.payload.content" />
           <MemberMessage
-              v-else-if="msg.type === 2"
-              :name="msg.sender_name"
-              :content-type="msg.content_type"
-              :content="msg.content"
+              v-else-if="msg.payload.sender_type === 2"
+              :name="msg.payload.sender_name"
+              :content-type="msg.payload.content_type"
+              :content="msg.payload.content"
               :timestamp="msg.timestamp"
           />
           <StaffMessage
               v-else
-              :name="msg.sender_name"
-              :content-type="msg.content_type"
-              :content="msg.content"
+              :name="msg.payload.sender_name"
+              :content-type="msg.payload.content_type"
+              :content="msg.payload.content"
               :timestamp="msg.timestamp"
           />
         </div>
@@ -72,15 +72,12 @@ export default {
         if(this.activeRoomId === "") {
           return
         }
-        await apiAcceptRoom({
-          id: this.activeRoomId
-        })
-        let id = this.activeRoomId
+        await apiAcceptRoom(this.activeRoomId)
         this.$store.commit("cs/RESET")
         await this.fetchRoomList()
-        this.$store.commit('cs/SET_ACTIVE_ROOM', id)
+        this.$store.commit('cs/SET_ACTIVE_ROOM', this.activeRoomId)
         const params = new URLSearchParams({
-          room_id: id,
+          room_id: this.activeRoomId,
           page: 1,
           page_size: 10,
         });

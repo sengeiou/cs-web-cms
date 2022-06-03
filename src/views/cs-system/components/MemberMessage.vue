@@ -1,6 +1,6 @@
 <template>
   <div class="member-message-container">
-    <template v-if="contentType === 2">
+    <template v-if="contentType === 1">
       <div class="content-section">
         <div class="content-desc">
           <span class="member-name">{{name}}</span>
@@ -9,7 +9,7 @@
         <div class="content-text">{{content}}</div>
       </div>
     </template>
-    <template v-if="contentType === 3">
+    <template v-if="contentType === 2">
       <div class="content-section">
         <div class="content-desc">
           <span class="member-name">{{name}}</span>

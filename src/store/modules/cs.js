@@ -34,12 +34,12 @@ const mutations = {
 	APPEND_MESSAGE(state, message) {
 		state.newMessage = true
 		// handle member join
-		if(message.content_type === 5) {
-			const result = state.roomList.filter(item => item.id === message.room_id);
+		if(message.op_type === 5) {
+			const result = state.roomList.filter(item => item.id === message.payload.room_id);
 			if(result.length === 0) {
 				state.roomList.push({
-					id: message.room_id,
-					memberName: message.extra_info.client_name,
+					id: message.payload.room_id,
+					memberName: message.payload.member_name,
 					status: "Serving",
 					message: "- 無內容 -",
 					isRead: false,
@@ -48,18 +48,18 @@ const mutations = {
 		} else {
 			let i
 			for (i = 0; i < state.roomList.length; i++) {
-				if (state.roomList[i].id === message.room_id) {
-					if(message.type === 2) {
-						if (message.content_type === 3) {
+				if (state.roomList[i].id === message.payload.room_id) {
+					if(message.payload.sender_type === 2) {
+						if (message.payload.content_type === 2) {
 							state.roomList[i].message = "會員上傳一張圖片"
 						} else {
-							state.roomList[i].message = message.content
+							state.roomList[i].message = message.payload.content
 						}
 					}
 					break
 				}
 			}
-			if(message.room_id === state.activeRoomId) {
+			if(message.payload.room_id === state.activeRoomId) {
 				state.roomList[i].isRead = true
 				state.messageList.push(message)
 			} else {
